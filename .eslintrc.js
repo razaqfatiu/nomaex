@@ -16,5 +16,7 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    "no-restricted-syntax": ["error", "WithStatement", "BinaryExpression[operator='in']"],
+    "consistent-return": "error"
   },
 };
