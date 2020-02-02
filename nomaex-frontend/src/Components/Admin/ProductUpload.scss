@@ -1,0 +1,13 @@
+.main {
+  width: 100%;
+  height: 1000px;
+  background-image: linear-gradient(to top, rgba(22, 21, 21, 0.6) 0%, rgba(11, 12, 12, 0.856) 100%),
+    url(../../images/Backgrounds/farm-rows-of-green.jpg);
+  background-size: contain;
+
+  border:  solid;
+
+  form {
+    margin: 20vh 10vw;
+  }
+}
