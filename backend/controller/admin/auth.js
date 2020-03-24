@@ -17,9 +17,11 @@ module.exports = {
     check('password').isLength({ min: 5 }).not().isEmpty()
       .trim()
       .withMessage('must be at least 5 chars long'),
-    check('gender').isLength({ min: 4 }).not().isEmpty()
+    check('address1').isLength({ min: 4 }).not().isEmpty()
       .trim(),
-    check('jobRole').not().isEmpty().trim(),
+    check('address2').not().isEmpty().trim(),
+    check('state').not().isEmpty().trim(),
+    check('phoneNumber').not().isEmpty().trim(),
   ],
 
   createAdmin(req, res) {
@@ -50,7 +52,15 @@ module.exports = {
         }
         const hash = await bcrypt.hash(password, 10);
         const newUser = {
-          firstName, lastName, email, address1, address2, state, phoneNumber, password: hash, isAdmin,
+          firstName,
+          lastName,
+          email,
+          address1,
+          address2,
+          state,
+          phoneNumber,
+          password: hash,
+          isAdmin,
         };
         // VALIDATION
         const errors = validationResult(req);
@@ -61,7 +71,6 @@ module.exports = {
         await User.create(newUser);
         return res.status(201).json({
           message: 'Admin Account successfully created',
-          token,
           userId,
         });
       } catch (err) {
@@ -93,28 +102,36 @@ module.exports = {
             error: 'Incorrect email or password',
           });
         }
+      
         if (!getUser[0].dataValues.isAdmin) {
           res.status(400).json({ error: 'Admin accounts only' });
         }
         const token = await jwt.sign(
-          { userId: getUser[0].dataValues.userId, email: getUser[0].dataValues.email, isAdministrator: true },
+          {
+            userId: getUser[0].dataValues.userId,
+            email: getUser[0].dataValues.email,
+            isAdministrator: true,
+          },
           process.env.TOKEN_SECRET,
           { expiresIn: '1h' },
         );
-        // res.cookie('login', token, 
+        res.setHeader('Cache-Control', 'private')
+
+        // res.cookie('login', token,
         res.cookie('jwtsignin', token, {
           maxAge: 60 * 60 * 1000, // 1 hour
-          // httpOnly: true,
+          httpOnly: false,
           // secure: true,
           sameSite: true,
-        })
-        // )
-        return res.status(200).json({
-          userId: getUser[0].dataValues.userId,
-          token,
         });
+        // )
+        res.send('done');
+        // return res.status(200).json({
+        //   userId: getUser[0].dataValues.userId,
+        //   token,
+        // });
       } catch (error) {
-        console.log(error)
+        console.log(error);
         return res.status(500).json({ error });
       }
     })();
@@ -134,7 +151,15 @@ module.exports = {
         const hash = await bcrypt.hash(password, 10);
         console.log(req.body);
         const newUser = {
-          firstName, lastName, email, address1, address2, state, phoneNumber, password: hash, isAdmin,
+          firstName,
+          lastName,
+          email,
+          address1,
+          address2,
+          state,
+          phoneNumber,
+          password: hash,
+          isAdmin,
         };
         await User.sync();
         await User.create(newUser);
@@ -142,7 +167,7 @@ module.exports = {
           message: 'Admin Account successfully created',
         });
       } catch (err) {
-        console.log(`ERRORI ${err}`)
+        console.log(`ERRORI ${err}`);
         return res.status(500).json({ errorResponse: err.message });
       }
     })();

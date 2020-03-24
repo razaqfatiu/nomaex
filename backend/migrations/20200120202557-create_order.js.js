@@ -43,9 +43,5 @@ module.exports = {
       defaultValue: null,
     },
   }),
-  down: (queryInterface, Sequelize) => {
-    queryInterface.removeConstraint('orders', 'orders_ibfk_1');
-    queryInterface.removeConstraint('orders', 'orders_ibfk_2');
-    return queryInterface.dropTable('orders');
-  },
+  down: (queryInterface, Sequelize) => queryInterface.dropTable('orders'),
 };

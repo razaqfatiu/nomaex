@@ -45,7 +45,7 @@ class SignUp extends Component {
   render() {
     const { auth, authError } = this.props;
     const { errors } = this.state
-    // console.log(auth);
+    console.log(auth);
 
     return (
       <div className="signin">
