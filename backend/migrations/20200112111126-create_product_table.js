@@ -60,9 +60,5 @@ module.exports = {
   }),
 
   // eslint-disable-next-line arrow-body-style
-  down: (queryInterface, Sequelize) => {
-    queryInterface.removeConstraint('products', 'products_ibfk_1');
-    queryInterface.removeConstraint('products', 'products_ibfk_2');
-    return queryInterface.dropTable('products');
-  },
+  down: (queryInterface, Sequelize) => queryInterface.dropTable('products'),
 };

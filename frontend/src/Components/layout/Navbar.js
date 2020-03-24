@@ -5,6 +5,7 @@ import $ from 'jquery';
 import nomeaxLogo from '../../images/nomeaxlogo.jpg';
 import SignedInLinks from './SignedInLinks';
 import SignedOutLink from './SignedOutLink';
+import AdminSignedInLinks from './AdminSignedInLinks'
 
 
 
@@ -41,6 +42,7 @@ export default class Navbar extends Component {
             <nav>
                 <SignedInLinks />
                 {/* <SignedOutLink /> */}
+                {/* <AdminSignedInLinks /> */}
             </nav>
           </div>
         </header>

@@ -11,10 +11,10 @@ module.exports = {
     check('productName', 'product name should not be empty').trim()
       .not().isEmpty(),
     check('productPrice', 'Product price should not be empty').trim()
-      .not().isEmpty(),
-    check('productDescription', 'Product Description should not be empty').trim()
+      .not().isEmpty().isInt(),
+    check('productDescription', 'Product Description should not be empty and less than 20').trim()
       .not().isEmpty()
-      .isLength({ min: 5 }),
+      .isLength({ min: 20 }),
     check('unit', 'Product unit should not be empty').trim()
       .not().isEmpty(),
   ],

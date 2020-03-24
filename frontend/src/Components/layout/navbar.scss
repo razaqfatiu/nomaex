@@ -64,7 +64,11 @@ nav {
           padding-left: 4px;
           content: " ▾";
         }
-      } // Dropdown list
+      }
+      a:hover {
+        text-decoration: none;
+      }
+      // Dropdown list
       ul li {
         min-width: 190px;
         a {

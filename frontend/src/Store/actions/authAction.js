@@ -1,5 +1,5 @@
 const axios = require('axios').default
-const url = `http://localhost:5000`
+const url = `http://localhost:4999`
 
 export const signUp = (credentials) => {
     return async (dispatch, getState) => {

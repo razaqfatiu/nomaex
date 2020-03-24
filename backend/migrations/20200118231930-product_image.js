@@ -45,8 +45,5 @@ module.exports = {
     },
   }),
 
-  down: (queryInterface, Sequelize) => {
-    queryInterface.removeConstraint('product-images', 'product-images_ibfk_1');
-    return queryInterface.dropTable('product-images');
-  },
+  down: (queryInterface, Sequelize) => queryInterface.dropTable('product-images'),
 };
