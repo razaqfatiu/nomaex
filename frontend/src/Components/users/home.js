@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
-import './home.scss'
-import firstSlide from '../../images/Backgrounds/carrots-for-sale-at-market.jpg'
-import secondSlide from '../../images/Backgrounds/market-peppers.jpg'
-import thirdSlide from '../../images/Backgrounds/farm-land-hay-bails.jpg'
+// import './home.scss'
+// import firstSlide from '../../images/Backgrounds/carrots-for-sale-at-market.jpg'
+// import secondSlide from '../../images/Backgrounds/market-peppers.jpg'
+// import thirdSlide from '../../images/Backgrounds/farm-land-hay-bails.jpg'
 import cock from '../../images/Backgrounds/cock.jpg'
 import cow from '../../images/Backgrounds/cow.jpg'
 import { Link } from 'react-router-dom'
-
+import classNames from "classnames";
+import { Container } from "react-bootstrap";
+import NavBar from "../layout/Navbar";
 
 
 export default class Homes extends Component {
@@ -18,59 +20,11 @@ export default class Homes extends Component {
   }
   render() {
     return (
-      <div className="main-ho">
+      <div className="main-ho mt-5">
+        
 
         {/* Header Slides */}
-        <div id="carouselExampleIndicators" className="carousel slide" data-ride="carousel">
-          <ol className="carousel-indicators">
-            <li data-target="#carouselExampleIndicators" data-slide-to="0" className="active"></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-          </ol>
-          <div className="carousel-inner">
-            <div className="carousel-item active">
-              <img className="first-slide" src={firstSlide} alt="First slide" />
-              <div className="container">
-                <div className="carousel-caption text-left">
-                  <h2>NOMAEX Farm</h2>
-                  <p>Buy the freshly Harvested Farm Products</p>
-                  <p><Link to="/signup"><button type="button" className="btn btn-primary btn-lg" >Signup</button></Link></p>
-                </div>
-
-              </div>
-            </div>
-            <div className="carousel-item">
-              <img className="second-slide" src={secondSlide} alt="Second slide" />
-              <div className="container">
-                <div className="carousel-caption text-left">
-                  <h2>NOMAEX Farm</h2>
-                  <p>NO. 1 Online farm products supplier in Nigeria</p>
-                  <p><Link to="/signup"><button type="button" className="btn btn-primary btn-lg" >Signup</button></Link></p>
-                </div>
-              </div>
-            </div>
-
-            <div className="carousel-item">
-              <img className="d-block w-100" src={thirdSlide} alt="Third slide" />
-              <div className="container">
-                <div className="carousel-caption text-left">
-                  <h2>NOMAEX Farm</h2>
-                  <p>We have the best in stock for you.</p>
-                  <p><Link to="/signup"><button type="button" className="btn btn-primary btn-lg" >Signup</button></Link></p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <a className="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span className="sr-only">Previous</span>
-          </a>
-          <a className="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-            <span className="carousel-control-next-icon" aria-hidden="true"></span>
-            <span className="sr-only">Next</span>
-          </a>
-        </div>
-
+        
 
         {/* Featured Products Title */}
 

@@ -21,22 +21,20 @@ class Home extends Component {
             <div className="carousel-caption">
               <h1 className="display-2">Nomaex Admin center</h1>
               <h3>Buy your farm products directly</h3>
-              <button type="button" className="btn btn-success btn-lg"  >Go Sign in</button>
+              <Link to="/signin/" type="button" className="btn btn-success btn-lg">Go Sign in</Link>
             </div>
           </div>
-            <div className="carousel-item">
-              <img src={slide2} />
+          <div className="carousel-item">
+            <img src={slide2} />
             <div className="carousel-caption">
               <h1 className="display-2">Nomaex Admin center</h1>
               <h3>Buy your farm products directly</h3>
-              <Link to="/admin/" type="button" className="btn btn-success btn-lg">Go Sign in</Link>
+              <Link to="/signin/" type="button" className="btn btn-success btn-lg">Go Sign in</Link>
             </div>
-            </div>
-            <div className="carousel-item">
-              <img src={slide3} />
-            </div>
-          
-
+          </div>
+          <div className="carousel-item">
+            <img src={slide3} />
+          </div>
         </div>
       </div>
     )

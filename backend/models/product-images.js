@@ -1,27 +1,28 @@
-const { sequelize, Sequelize } = require('./connection');
+// const { sequelize, Sequelize } = require('./connection');
+'use strict';
 
-
-const productImage = sequelize.define('product-image', {
+module.exports = (sequelize, DataTypes) => {
+const ProductImage = sequelize.define('Product_image', {
   imageId: {
-    type: Sequelize.INTEGER,
+    type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
     allowNull: false,
   },
   imageUrl: {
-    type: Sequelize.STRING,
+    type: DataTypes.STRING,
     allowNull: false,
   },
   imageSize: {
-    type: Sequelize.STRING,
+    type: DataTypes.STRING,
     allowNull: false,
   },
   mimeType: {
-    type: Sequelize.STRING,
+    type: DataTypes.STRING,
     allowNull: false,
   },
   productId: {
-    type: Sequelize.INTEGER,
+    type: DataTypes.INTEGER,
     references: {
       model: 'products',
       key: 'productId',
@@ -29,55 +30,25 @@ const productImage = sequelize.define('product-image', {
     onDelete: 'CASCADE',
   },
   isDeleted: {
-    type: Sequelize.BOOLEAN,
+    type: DataTypes.BOOLEAN,
     defaultValue: false
   },
   deletedAt: {
-    type: Sequelize.DATE,
+    type: DataTypes.DATE,
     allowNull: true,
     defaultValue: null,
   },
 
 }, {});
-productImage.associate = (models) => {
+
+ProductImage.associate = (models) => {
   // associations can be defined here
-  productImage.belongsTo(models.Product, { foreignKey: 'product-images_ibfk_1' });
+  models.Product_image.belongsTo(models.Product, {
+    as: 'products',
+    foreignKey: 'productId',
+    // foreignKey: 'product-images_ibfk_1',
+    
+  });
 };
-
-module.exports = productImage;
-
-// module.exports = (sequelize, Sequelize) => {
-//   const productImage = sequelize.define('product-image', {
-//     imageId: {
-//       type: Sequelize.INTEGER,
-//       primaryKey: true,
-//       autoIncrement: true,
-//       allowNull: false,
-//     },
-//     imageUrl: {
-//       type: Sequelize.STRING,
-//       allowNull: false,
-//     },
-//     imageSize: {
-//       type: Sequelize.STRING,
-//       allowNull: false,
-//     },
-//     mimeType: {
-//       type: Sequelize.STRING,
-//       allowNull: false,
-//     },
-//     productId: {
-//       type: Sequelize.INTEGER,
-//       references: {
-//         model: 'products',
-//         key: 'productId',
-//       },
-//     },
-
-//   }, {});
-//   productImage.associate = (models) => {
-//     // associations can be defined here
-//     // productImage.belongsTo(models.Product);
-//   };
-//   return productImage;
-// };
+  return ProductImage
+}

@@ -1,63 +1,58 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faFacebookF, faTwitter, faLinkedin, faInstagram } from "@fortawesome/free-brands-svg-icons"
+import { faFacebookF, faTwitter, faLinkedin, faInstagram, } from "@fortawesome/free-brands-svg-icons"
 import './footer.scss'
+import { Navbar, Button, Nav, Container, Row, Col } from "react-bootstrap";
+
 
 export default class Footer extends Component {
   render() {
     return (
-      <div className="footer-page">
-        {/* <!-- Footer --> */}
-        <footer className="page-footer font-small cyan darken-3 ">
+      <Navbar className="footer-main-div" fixed="bottom">
+        <Container fluid className="footer-div">
+          {/* <Container> */}
+          <Row className="Row">
+            <Col className="text-left foot-left">
+              <p className="footer-element">© 2020 NOMAEX</p>
+            </Col>
+            <Col className="text-right foot-right">
+              <ul>
+                <li>
+                  <FontAwesomeIcon icon={faFacebookF} className="white-text mr-md-5 mr-3 footer-element" color="white" size="lg" />
+                </li>
+                <li>
+                  <FontAwesomeIcon icon={faTwitter} className="white-text mr-md-5 mr-3 footer-element" color="white" size="lg" />
+                </li>
+                <li>
+                  <FontAwesomeIcon icon={faInstagram} className="white-text mr-md-5 mr-3 footer-element" color="white" />
+                </li>
+              </ul>
+            </Col>
 
-          {/* <!-- Footer Elements --> */}
-          <div className="container">
+          </Row>
+          {/* </Container> */}
+          {/* <div className="footer-copyright text-center py-3"></div> */}
+          {/* <Link to="/">
+            <FontAwesomeIcon icon={faFacebookF} className="white-text mr-md-5 mr-3 fa-2x" color="white" size="lg" />
+          </Link>
+          <Link to="/">
+            <FontAwesomeIcon icon={faTwitter} className="white-text mr-md-5 mr-3 fa-2x" color="white" size="lg" />
+          </Link>
 
-            {/* <!-- Grid row--> */}
-            <div className="row">
+          <Link to="/">
+            <FontAwesomeIcon icon={faLinkedin} className="white-text mr-md-5 mr-3 fa-2x" color="white" />
+          </Link>
+          <Link to="/">
+            <FontAwesomeIcon icon={faInstagram} className="white-text mr-md-5 mr-3 fa-2x" color="white" />
+          </Link> */}
 
-              {/* <!-- Grid column --> */}
-              <div className="col-md-12 py-5 text-center">
-                <div className="mb-5 flex-center">
 
-                  {/* <!-- Facebook --> */}
-                  <Link to="/">
-                    <FontAwesomeIcon icon={faFacebookF} className="white-text mr-md-5 mr-3 fa-2x" color="white" size="lg" />
-                  </Link>
-                  {/* <!-- Twitter --> */}
-                  <Link to="/">
-                    <FontAwesomeIcon icon={faTwitter} className="white-text mr-md-5 mr-3 fa-2x" color="white" size="lg" />
-                  </Link>
 
-                  {/* <!--Linkedin --> */}
-                  <Link to="/">
-                    <FontAwesomeIcon icon={faLinkedin} className="white-text mr-md-5 mr-3 fa-2x" color="white" />
-                  </Link>
-                  {/* <!--Instagram--> */}
-                  <Link to="/">
-                    <FontAwesomeIcon icon={faInstagram} className="white-text mr-md-5 mr-3 fa-2x" color="white" />
-                  </Link>
 
-                </div>
-              </div>
-              {/* <!-- Grid column --> */}
 
-            </div>
-            {/* <!-- Grid row--> */}
-
-          </div>
-          {/* <!-- Footer Elements --> */}
-
-          {/* <!-- Copyright --> */}
-          <div className="footer-copyright text-center py-3">© 2020 NOMAEX
-{/* <a href="https://mdbootstrap.com/"> MDBootstrap.com</a> */}
-          </div>
-          {/* <!-- Copyright --> */}
-
-        </footer>
-        {/* <!-- Footer --> */}
-      </div>
+        </Container>
+      </Navbar>
     )
   }
 }

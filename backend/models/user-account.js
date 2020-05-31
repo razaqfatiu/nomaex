@@ -1,71 +1,76 @@
-const { sequelize, Sequelize } = require('./connection');
+'use strict';
 
-const User = sequelize.define('user', {
-  userId: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-    allowNull: false,
-  },
-  firstName: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  lastName: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  email: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  address1: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  address2: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  state: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  phoneNumber: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  password: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  isAdmin: {
-    type: Sequelize.BOOLEAN,
-    allowNull: false,
-    defaultValue: false,
-  },
-  createdAt: {
-    type: Sequelize.DATE,
-    allowNull: false,
-    defaultValue: Sequelize.NOW(),
-  },
-  updatedAt: {
-    type: Sequelize.DATE,
-    allowNull: true,
-  },
-  isDeleted: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false
-  },
-  deletedAt: {
-    type: Sequelize.DATE,
-    defaultValue: null,
-  },
-}, {});
-User.associate = (models) => {
-  // associations can be defined here
-  User.hasMany(models.Product, { foreignKey: 'products_ibfk_2' });
-  User.hasMany(models.Order, { foreignKey: 'orderId' });
-};
-
-module.exports = User;
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('User', {
+    userId: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    address1: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    address2: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    state: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    phoneNumber: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    isAdmin: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW(),
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    deletedAt: {
+      type: DataTypes.DATE,
+      defaultValue: null,
+    },
+  }, {});
+  User.associate = (models) => {
+    // associations can be defined here
+    models.User.hasMany(models.Product, {
+      foreignKey: 'productId'
+    });
+    models.User.hasMany(models.Order, {
+      foreignKey: 'orderId'
+    });
+  };
+  return User
+}

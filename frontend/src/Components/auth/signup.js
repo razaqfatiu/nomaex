@@ -109,14 +109,14 @@ class SignUp extends Component {
             {/* Password */}
             <label htmlFor="password">Password: </label>
             <input type="password" id="password" className="form-control" placeholder="Password" required
-              pattern=".{8,}" aria-describedby="defaultRegisterFormPasswordHelpBlock" onChange={this.handleChange} />
+              pattern=".{7,}" aria-describedby="defaultRegisterFormPasswordHelpBlock" onChange={this.handleChange} />
             <small id="defaultRegisterFormPasswordHelpBlock" className="form-text text-muted mb-4">
-              At least 8 characters
+              At least 7 characters
             </small>
 
             <label htmlFor="confirmPassword">Confirm Password: </label>
             <input type="password" id="confirmPassword" className="form-control" placeholder="Confirm Password" required
-              pattern=".{8,}" aria-describedby="defaultRegisterFormPasswordHelpBlock" onChange={this.handleChange} />
+              pattern=".{7,}" aria-describedby="defaultRegisterFormPasswordHelpBlock" onChange={this.handleChange} />
             <br />
 
             <label htmlFor="errror" className="text-danger">
@@ -142,7 +142,7 @@ class SignUp extends Component {
 const mapStateToProps = (state) => {
   return {
     auth: state,
-    authError: state.authReducer.authError
+        // authError: state.authReducer.authError
   }
 }
 

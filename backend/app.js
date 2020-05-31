@@ -10,18 +10,20 @@ const http = require('http');
 const debug = require('debug')('app');
 const userRouter = require('./routes/user');
 const adminRouter = require('./routes/admin');
+const cors = require('cors');
 
 const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || '5000';
-// const db = require('./models/index');
-const { sequelize } = require('./models/connection');
+const db = require('./models/index');
+const { sequelize } = db;
+// const { sequelize } = require('./models/connection');
 
 
 (async function () {
   try {
     await sequelize.authenticate();
-    debug('connected to Db......');
+    debug('connected to Db on 3306......');
   } catch (err) {
     debug(`db error: ${err}`);
   }
@@ -41,7 +43,7 @@ app.use(bodyParser.json());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+app.use(cors());
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');

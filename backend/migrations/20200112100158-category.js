@@ -11,12 +11,12 @@ module.exports = {
     value: {
       type: Sequelize.STRING,
       allowNull: false,
+      primaryKey: true,
     },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE,
       defaultValue: new Date(),
-
     },
     updatedAt: {
       allowNull: false,
@@ -32,6 +32,13 @@ module.exports = {
       defaultValue: null,
     },
 
+  }, {
+    indexes: [
+      {
+          unique: true,
+          fields: ['value']
+      }
+    ]
   }),
 
   down: (queryInterface, Sequelize) => queryInterface.dropTable('categories'),

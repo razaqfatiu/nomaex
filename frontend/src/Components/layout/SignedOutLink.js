@@ -1,21 +1,19 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
+import { Navbar, Button, Nav } from "react-bootstrap";
 
 
 export default class SignedOutLink extends Component {
   render() {
     return (
-      <div>
-        <div className="nav-mobile"><Link id="nav-toggle" to="/"><span></span></Link></div>
-        <ul className="nav-list">
-          <li>
-            <Link to="/signin">SignIn</Link>
-          </li>
-          <li>
-            <Link to="/signup">Create an Account</Link>
-          </li>
-        </ul>
-      </div>
+
+        <Nav className="ml-auto" navbar>
+          <Nav.Link className="text-white" href="/signin">SignIn</Nav.Link>
+          <Nav.Link className="text-white" href="/signup">Create an Account</Nav.Link>
+          {/* <Nav.Link href="#">About Us</Nav.Link>
+          <Nav.Link href="#"><i className="fa fa-shopping-cart"></i> <span className="badge badge-light">0</span></Nav.Link> */}
+        </Nav>
+        
     )
   }
 }

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './signIn.scss';
 import { signIn } from '../../Store/actions/authAction'
 import { connect } from 'react-redux';
+import { Link, Redirect } from 'react-router-dom';
+import Loading from '../layout/Loading';
 
 class SignIn extends Component {
   constructor(props) {
@@ -11,6 +13,10 @@ class SignIn extends Component {
       password: '',
       // errors: {}
     };
+  }
+
+  componentDidMount() {
+
   }
 
   handleChange = (e) => {
@@ -31,47 +37,58 @@ class SignIn extends Component {
   render() {
 
     const { errors } = this.state;
-    const { auth, authError } = this.props
-    console.log(auth)
+    const { auth, authError, loading } = this.props
+    // let auth = this.props.auth;
+    // console.log(auth, loading)
+    // if(loading === false) {
+    //   auth = this.props.auth
+    // }
 
+    console.log(authError)
+    // auth.map(e => console.log(e.data))
+    // console.log(auth.payload.status);
+    // if(auth.payload.status === 200 ) return <Redirect to="/admin" />
     return (
       <div className="signin">
         <h1 className="welcome">WELCOME BACK</h1>
         <hr className="line" />
-        
-          <div className="form-div">
-            <form className="text-center border rounded border-light p-5 bg-light" onSubmit={this.handleSubmit}>
 
-              <h2 className="p-3">Nomeax</h2>
+        <div className="form-div">
+          <form className="text-center border rounded border-light p-5 bg-light" onSubmit={this.handleSubmit}>
 
-              {/* Email */}
-              <label htmlFor="email">Email Address</label>
-              <input type="email" id="email" className="form-control mb-4" placeholder="E-mail" onChange={this.handleChange} required  />
+            <h2 className="p-3">Nomeax</h2>
 
-              {/* Password */}
-              <label htmlFor="password">Password</label>
-              <input type="password" id="password" className="form-control mb-4" placeholder="Password" onChange={this.handleChange} required />
+            {/* Email */}
+            <label htmlFor="email">Email Address</label>
+            <input type="email" id="email" className="form-control mb-4" placeholder="E-mail" onChange={this.handleChange} required />
 
-              {/* error*/}
+            {/* Password */}
+            <label htmlFor="password">Password</label>
+            <input type="password" id="password" className="form-control mb-4" placeholder="Password" onChange={this.handleChange} required />
 
-              <div className="d-flex justify-content-around">
-                <div>
-                  {/* Remember me */}
-                  <div className="custom-control custom-checkbox">
-                    <input type="checkbox" className="custom-control-input" id="defaultLoginFormRemember" />
-                    <label className="custom-control-label" htmlFor="defaultLoginFormRemember">Remember me</label>
-                  </div>
-                </div>
-                <div>
-                  {/* Forgot password */}
-                  <a href="">Forgot password?</a>
+            {/* error*/}
+
+            <div className="d-flex justify-content-around">
+              <div>
+                {/* Remember me */}
+                <div className="custom-control custom-checkbox">
+                  <input type="checkbox" className="custom-control-input" id="defaultLoginFormRemember" />
+                  <label className="custom-control-label" htmlFor="defaultLoginFormRemember">Remember me</label>
                 </div>
               </div>
+              <div>
+                {/* Forgot password */}
+                <a href="">Forgot password?</a>
+              </div>
+            </div>
 
-              {/* Sign in button */}
-              <button className="btn btn-success btn-block my-4" type="submit" id="login">Sign in</button>
-            </form>
-          </div>
+            {/* Sign in button */}
+            <button className="btn btn-success btn-block my-4" type="submit" id="login">Sign in</button>
+            <p>Do not have an account?
+                <Link to="/signup">Sign Up</Link>
+            </p>
+          </form>
+        </div>
       </div>
     );
   }
@@ -79,8 +96,8 @@ class SignIn extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    auth: state.authReducer.payload,
-    authError: state.authReducer.authError
+    auth: state.auth,
+    authError: state.auth.authError,
   }
 }
 
@@ -92,4 +109,4 @@ const mapDispatchToProps = (dispatch) => {
 
 
 
-export default connect(mapStateToProps, mapDispatchToProps) (SignIn);
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn);

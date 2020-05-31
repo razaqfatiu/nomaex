@@ -1,80 +1,79 @@
-/* eslint-disable no-unused-vars */
-require('dotenv').config();
-// const Sequelize = require('sequelize');
-// const sequelize = new Sequelize(`mysql://${process.env.dbUser}:${process.env.dbPassword}@${process.env.dbHost}/${process.env.dbName}`);
-// const db = require('./index');
-const category = require('./category');
-const User = require('./user-account');
+'use strict';
 
-// const sequelize = require('./index');
-// const Sequelize = require('./index');
 
-// const { sequelize, Sequelize } = require('./index');
-const { sequelize, Sequelize } = require('./connection');
-
-const Product = sequelize.define('product', {
-  productId: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-    allowNull: false,
-  },
-  productName: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  productDescription: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  productPrice: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  unit: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-  },
-  categoryId: {
-    type: Sequelize.INTEGER,
-    references: {
-      model: 'categories',
-      key: 'categoryId',
+module.exports = (sequelize, DataTypes) => {
+  const Product = sequelize.define('Product', {
+    productId: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
     },
-    onDelete: 'CASCADE',
-  },
-  uploadedBy: {
-    type: Sequelize.INTEGER,
-    references: {
-      model: 'users',
-      key: 'userId',
+    productName: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    onDelete: 'CASCADE',
-  },
-  createdAt: {
-    allowNull: false,
-    type: Sequelize.DATE,
-  },
-  updatedAt: {
-    allowNull: false,
-    type: Sequelize.DATE,
-  },
-  isDeleted: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false
-  },
-  deletedAt: {
-    allowNull: true,
-    type: Sequelize.DATE,
-    defaultValue: null,
-  },
-}, {});
-Product.associate = (models) => {
-  // associations can be defined here
-  Product.belongsTo(models.category, { foreignKey: 'products_ibfk_1' });
-  Product.belongsTo(models.User, { foreignKey: 'products_ibfk_2' });
-  Product.hasMany(models.productImage, { foreignKey: 'product-images_ibfk_1' });
+    productDescription: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    productPrice: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    unit: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    categoryId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'categories',
+        key: 'categoryId',
+      },
+      onDelete: 'CASCADE',
+    },
+    uploadedBy: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'users',
+        key: 'userId',
+      },
+      onDelete: 'CASCADE',
+    },
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+    },
+    updatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+    },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    deletedAt: {
+      allowNull: true,
+      type: DataTypes.DATE,
+      defaultValue: null,
+    },
+  }, {})
+  Product.associate = (models) => {
+    models.Product.belongsTo(models.Category, {
+      // as: 'category',
+      foreignKey: 'productId'
+    });
+    models.Product.belongsTo(models.User, {
+      // as: 'users',
+      foreignKey: 'uploadedBy'
+    });
+    models.Product.hasMany(models.Product_image, {
+      // as: 'product_images',
+      foreignKey: 'productId',
+    });
+
+  };
+  return Product;
 };
-//   return Product;
-// };
-module.exports = Product;
+// module.exports = Product;

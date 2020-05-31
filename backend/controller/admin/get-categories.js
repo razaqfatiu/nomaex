@@ -1,10 +1,12 @@
 const User = require('../../models/user-account');
+const Categories = require('../../models/category');
+const models = require('../../models/index')
 
 module.exports = {
     listAllCategories(req, res) {
         (async () => {
             try {
-                const getCategories = User.findAll({
+                const getCategories = await models.Category.findAll({
                     attributes: ['categoryId', 'value']
                 })
                 res.status(200).json({
@@ -12,7 +14,8 @@ module.exports = {
                 })
             }
             catch(error) {
-                res.status(400).json({
+                console.log(error)
+                res.status(500).json({
                     error
                 })
             }

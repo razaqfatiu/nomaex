@@ -1,4 +1,21 @@
-.footer-page {
+.footer-main-div {
   background-color: #097725;
   color: #ffffff;
+  margin-top: 50vw !important;
+}
+.footer-div {
+  margin-top: 15px;
+}
+.Row {
+  // border: 2px solid wheat;
+  width: 100%;
+}
+
+ul > li {
+  list-style: none;
+  display: inline;
+}
+
+.footer-element {
+  font-size: 1.7vw;
 }

@@ -1,41 +1,60 @@
-/* eslint-disable no-unused-vars */
-const db = require('./index');
-const Product = require('./product');
+// /* eslint-disable no-unused-vars */
+// const db = require('./index');
+'use strict';
 
-// const { sequelize, Sequelize } = db;
-const { sequelize, Sequelize } = require('./connection');
+// const Product = require('./product');
 
+// // const { sequelize, Sequelize } = db;
+// const { sequelize, Sequelize } = require('./connection');
 
-const category = sequelize.define('category', {
-  categoryId: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-    allowNull: false,
-  },
-  value: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  createdAt: {
-    allowNull: false,
-    type: Sequelize.DATE,
-  },
-  updatedAt: {
-    allowNull: false,
-    type: Sequelize.DATE,
-  },
-  isDeleted: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false
-  },
-  deletedAt: {
-    type: Sequelize.DATE,
-    defaultValue: null,
-  },
-}, {});
-category.associate = (models) => {
-  category.hasMany(Product, { foreignKey: 'products_ibfk_1' });
-};
-
-module.exports = category;
+module.exports = (sequelize, DataTypes) => {
+  const Category = sequelize.define('Category', {
+    categoryId: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
+    value: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      primaryKey: true,
+    },
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+    },
+    updatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+    },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    deletedAt: {
+      type: DataTypes.DATE,
+      defaultValue: null,
+    },
+  }, {});
+  // {
+  //   indexes: [
+  //     {
+  //         unique: true,
+  //         fields: ['value']
+  //     }
+  // ]
+  // });
+  Category.associate = (models) => {
+    models.Category.hasMany(models.Product,
+      {
+        as: 'categories',
+        foreignKey: 'productId',
+        // foreignKey: {
+        //   allowNull: false
+        // }
+      });
+  };
+  return Category
+}
+// module.exports = category;

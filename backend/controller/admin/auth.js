@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const { check, validationResult } = require('express-validator');
 const { Op } = require('sequelize');
 
+const models = require('../../models/index');
 const User = require('../../models/user-account');
 
 
@@ -34,7 +35,7 @@ module.exports = {
     const { token, isAdministrator } = req.user;
     (async () => {
       try {
-        const checkIfNewuserExists = await User.findAll({
+        const checkIfNewuserExists = await models.User.findAll({
           where: {
             [Op.and]: [
               { email },
@@ -67,8 +68,8 @@ module.exports = {
         if (!errors.isEmpty()) {
           return res.status(422).json({ errors: errors.array() });
         }
-        await User.sync();
-        await User.create(newUser);
+        await models.User.sync();
+        await models.User.create(newUser);
         return res.status(201).json({
           message: 'Admin Account successfully created',
           userId,
@@ -83,7 +84,7 @@ module.exports = {
 
     (async () => {
       try {
-        const getUser = await User.findAll({
+        const getUser = await models.User.findAll({
           where: {
             [Op.and]: [
               { email },
@@ -115,21 +116,21 @@ module.exports = {
           process.env.TOKEN_SECRET,
           { expiresIn: '1h' },
         );
-        res.setHeader('Cache-Control', 'private')
+        // res.setHeader('Cache-Control', 'private')
 
         // res.cookie('login', token,
         res.cookie('jwtsignin', token, {
           maxAge: 60 * 60 * 1000, // 1 hour
           httpOnly: false,
-          // secure: true,
+          secure: true,
           sameSite: true,
         });
         // )
-        res.send('done');
-        // return res.status(200).json({
-        //   userId: getUser[0].dataValues.userId,
-        //   token,
-        // });
+        // res.send('done');
+        return res.status(200).json({
+          userId: getUser[0].dataValues.userId,
+          token,
+        });
       } catch (error) {
         console.log(error);
         return res.status(500).json({ error });
@@ -144,7 +145,7 @@ module.exports = {
 
     (async () => {
       try {
-        const checkIfNewuserExists = await User.findAll({ where: { email } });
+        const checkIfNewuserExists = await models.User.findAll({ where: { email } });
         if (checkIfNewuserExists.length > 0) {
           return res.status(400).json({ error: 'User account exists' });
         }
@@ -161,8 +162,8 @@ module.exports = {
           password: hash,
           isAdmin,
         };
-        await User.sync();
-        await User.create(newUser);
+        await models.User.sync();
+        await models.User.create(newUser);
         return res.status(201).json({
           message: 'Admin Account successfully created',
         });

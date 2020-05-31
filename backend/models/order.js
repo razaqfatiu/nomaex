@@ -1,17 +1,16 @@
-/* eslint-disable no-unused-vars */
-// 'use strict';
+// /* eslint-disable no-unused-vars */
+'use strict';
 
-const { Sequelize, sequelize } = require('./connection');
-
-const Order = sequelize.define('order', {
+module.exports = (sequelize, DataTypes) => {
+const Order = sequelize.define('Order', {
   orderId: {
-    type: Sequelize.INTEGER,
+    type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
     allowNull: false,
   },
   productId: {
-    type: Sequelize.INTEGER,
+    type: DataTypes.INTEGER,
     allowNull: false,
     references: {
       model: 'products',
@@ -21,35 +20,38 @@ const Order = sequelize.define('order', {
   },
   customerId: {
     allowNull: false,
-    type: Sequelize.INTEGER,
+    type: DataTypes.INTEGER,
     references: {
       model: 'users',
       key: 'userId',
     },
     onDelete: 'CASCADE',
   },
+  status: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
   createdAt: {
     allowNull: false,
-    type: Sequelize.DATE,
+    type: DataTypes.DATE,
   },
   updatedAt: {
     allowNull: false,
-    type: Sequelize.DATE,
+    type: DataTypes.DATE,
   },
   isDeleted: {
-    type: Sequelize.BOOLEAN,
+    type: DataTypes.BOOLEAN,
     defaultValue: false
   },
   deletedAt: {
-    type: Sequelize.DATE,
+    type: DataTypes.DATE,
     defaultValue: null,
   },
 }, {});
 
 Order.associate = (models) => {
-  // associations can be defined here
-  Order.belongsTo(models.Product, { foreignKey: 'orders_ibfk_1' });
-  Order.belongsTo(models.User, { foreignKey: 'orders_ibfk_2' });
+  models.Order.belongsTo(models.Product, { foreignKey: 'orderId' });
+  models.Order.belongsTo(models.User, { foreignKey: 'orderId' });
 };
-
-module.exports = Order;
+  return Order
+}

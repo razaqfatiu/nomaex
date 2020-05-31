@@ -15,6 +15,7 @@ import rootReducer from './Store/reducers/rootReducer';
 
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
+// console.log(store.getState().category)
 
 ReactDOM.render(
   <Provider store={store}>

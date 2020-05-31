@@ -1,5 +1,5 @@
 const axios = require('axios').default
-const url = `http://localhost:4999`
+const url = `http://localhost:5000`
 
 export const signUp = (credentials) => {
     return async (dispatch, getState) => {
@@ -16,12 +16,13 @@ export const signUp = (credentials) => {
 export const signIn = (credentials) => {
     return async (dispatch, getState) => {
             try {
+                let loading = getState().auth.loading = true
                 const signInResponse = await axios.post(`${url}/admin/signin`, credentials)
-                dispatch({ type: 'SIGNIN_SUCCESS', payload: signInResponse})
+                loading = getState().auth.loading = false
+                dispatch({ type: 'SIGNIN_SUCCESS', payload: signInResponse, loading})
             }
             catch (error) {
-                dispatch({ type: 'SIGNIN_FAILURE', error: error})
-
+                dispatch({ type: 'SIGNIN_FAILURE', error })
             }
     }
 }

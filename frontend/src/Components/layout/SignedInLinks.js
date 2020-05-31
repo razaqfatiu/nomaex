@@ -1,64 +1,24 @@
 import React, { Component } from 'react'
 import { NavLink, Link } from 'react-router-dom'
+import { Navbar, Button, Nav, Form, FormControl } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 export default class SignedInLinks extends Component {
   render() {
     return (
-      <div>
-        <div className="nav-mobile"><Link id="nav-toggle" ><span></span></Link></div>
-        <ul className="nav-list">
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          {/* <li>
-            <Link to="/">About</Link>
-          </li> */}
-          <li>
-            <a href="#">Products Category</a>
-            <ul className="nav-dropdown">
-              <li>
-                <Link to="/categories/animal">Animal</Link>
-              </li>
-              {/* <li>
-                <Link to="/">Farm-tool </Link>
-              </li> */}
-              <li>
-                <Link to="/categories/fishery">Fishery</Link>
-              </li>
-              <li>
-                <Link to="/categories/fruit">Fruit</Link>
-              </li>
-              {/* <li>
-                <Link to="/">Grains</Link>
-              </li>
-              <li>
-                <Link to="/">Other</Link>
-              </li> */}
-              <li>
-                <Link to="/categories/poultry">Poultry</Link>
-              </li>
-              {/* <li>
-                <Link to="/">Tubers</Link>
-              </li> */}
-              {/* <li>
-                <Link to="/">Grains</Link>
-              </li> */}
-            </ul>
-          </li>
-          <li>
-            <Link to="/">Services</Link>
-          </li>
-          <li>
-            <Link to="/categories/contact">Contact Us</Link>
-          </li>
-          <li>
-            <Link to="/categories/checkout"><i className="fa fa-shopping-cart"></i> <span className="badge badge-light">0</span></Link>
-          </li>
-          {/* <li>
-            <Link to="/">Logout</Link>
-          </li> */}
-        </ul>
-      </div>
+      <Nav className="ml-auto" navbar >
+        <Nav.Link className="text-white" href="/">Home</Nav.Link>
+        <Nav.Link className="text-white" href="/categories/contact">Contact Us</Nav.Link>
+        <Nav.Link className="text-white" href="#">About Us</Nav.Link>
+        <Nav.Link className="text-white" href="#"><i className="fa fa-shopping-cart"></i> <span className="badge badge-light">0</span></Nav.Link>
+        {/* <Form inline className="text-center">
+          <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+          <Nav.Link  href="/">
+            <FontAwesomeIcon className="text-white" icon={faSearch} color="black" />
+          </Nav.Link>
+        </Form> */}
+      </Nav>
     )
   }
 }
