@@ -4,10 +4,10 @@ const {
 } = require('../controller/admin/auth');
 const { auth } = require('../middleware/auth');
 const {
-  postProduct, uploadValidator, getCategories, updateProduct,
+  postProduct, uploadValidator, getCategories, updateProduct, getAllProducts, deleteProduct
 } = require('../controller/admin/products');
 const { listAllCategories } = require('../controller/admin/get-categories');
-const { getAllProducts, getOneProduct } = require('../controller/admin/product')
+const { getOneProduct } = require('../controller/admin/product')
 const multer = require('../middleware/multer');
 
 const adminRouter = express.Router();
@@ -21,7 +21,8 @@ adminRouter.get('/categories', listAllCategories)
 
 adminRouter.get('/products', getAllProducts)
 adminRouter.post('/products/one', getOneProduct)
-adminRouter.patch('products', multer, updateProduct)
+adminRouter.patch('/product', multer, updateProduct)
+adminRouter.delete('/product', deleteProduct)
 
 
 module.exports = adminRouter;

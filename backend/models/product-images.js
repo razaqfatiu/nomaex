@@ -9,6 +9,10 @@ const ProductImage = sequelize.define('Product_image', {
     autoIncrement: true,
     allowNull: false,
   },
+  fileName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   imageUrl: {
     type: DataTypes.STRING,
     allowNull: false,

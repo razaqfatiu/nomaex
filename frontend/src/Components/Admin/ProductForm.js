@@ -9,7 +9,6 @@ class ProductForm extends Component {
     super(props);
     this.data = null;
     this.state = {
-      // productId: this.props.product.productId,
       productName: '',
       productPrice: '',
       productDescription: '',
@@ -17,7 +16,6 @@ class ProductForm extends Component {
       unit: '',
       productImage: [],
       invalidImage: '',
-      // data: null
     };
   }
 
@@ -29,13 +27,11 @@ class ProductForm extends Component {
     this.setState({
       [event.target.id]: event.target.value
     })
-    // console.log(this.state)
   }
 
   onSelect = (event) => {
     const selectedIndex = event.target.options.selectedIndex;
     this.setState({ categoryId: event.target.options[selectedIndex].getAttribute('data-key') });
-    // console.log(this.state.categoryId)
   }
 
   onChangeFile = event => {
@@ -57,7 +53,7 @@ class ProductForm extends Component {
     const { categories: categoriesState } = this.props
     const { categories } = categoriesState
     const { product } = this.props
-    console.log(product)
+    // console.log(product)
 
     return (
       <div>

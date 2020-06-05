@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react'
 import { connect } from 'react-redux'
-import { Navbar, Button, Form, Card, Container, Row, Col, Carousel } from "react-bootstrap";
+import { Button, Container, Row, Col, Carousel } from "react-bootstrap";
 import './Product.scss'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartArrowDown } from "@fortawesome/free-solid-svg-icons";
@@ -36,7 +36,7 @@ class ProductDetails extends Component {
 
     const { product } = this.state
     // const id = this.props.match.params.id;
-    // console.log(product, this.props)
+    console.log(product, this.props)
     // const [index, setIndex] = useState(0);
 
 
@@ -101,14 +101,12 @@ class ProductDetails extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const id = ownProps.match.params.id;
-  const products = state.product.products
-  let product;
-  products.map((prod, i) => {
-    product = (prod.productId === parseInt(id)) ? prod : null
-  })
+  const id = parseInt(ownProps.match.params.id);
+  const products = state.product.products;
+  const product = products.filter((prod) => prod.productId === id )[0]
   return {
     product,
+    products: state.product.products
   }
 }
 

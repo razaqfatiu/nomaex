@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('categories', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Categories', {
     categoryId: {
       type: Sequelize.INTEGER,
       primaryKey: true,
@@ -41,5 +41,5 @@ module.exports = {
     ]
   }),
 
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('categories'),
+  down: (queryInterface, Sequelize) => queryInterface.dropTable('Categories'),
 };

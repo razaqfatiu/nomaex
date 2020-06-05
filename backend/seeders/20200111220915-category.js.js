@@ -20,6 +20,6 @@ for (category of categories) {
 }
 
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.bulkInsert('categories', arr, {}),
-  down: (queryInterface, Sequelize) => queryInterface.bulkDelete('categories', null, {}),
+  up: (queryInterface, Sequelize) => queryInterface.bulkInsert('Categories', arr, {}),
+  down: (queryInterface, Sequelize) => queryInterface.bulkDelete('Categories', null, {}),
 };

@@ -1,26 +1,11 @@
-/* eslint-disable no-unused-vars */
+'use strict';
+
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('Product_images', {
-    imageId: {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Carts', {
+    cartId: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true,
-      allowNull: false,
-    },
-    fileName: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-    imageUrl: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-    imageSize: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-    mimeType: {
-      type: Sequelize.STRING,
       allowNull: false,
     },
     productId: {
@@ -30,6 +15,18 @@ module.exports = {
         model: 'Products',
         key: 'productId',
       },
+    },
+    customerId: {
+      type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'Users',
+        key: 'userId',
+      },
+    },
+    quantity: {
+      allowNull: false,
+      type: Sequelize.STRING
     },
     createdAt: {
       allowNull: false,
@@ -49,5 +46,6 @@ module.exports = {
     },
   }),
 
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('Product_images'),
+  down: (queryInterface, Sequelize) => queryInterface.dropTable('Carts'),
+
 };

@@ -17,6 +17,7 @@ class Product extends Component {
   render() {
     const { product } = this.props
     const { products } = product
+    console.log(products)
 
     if (product.loading) return <Loading />
     if (!product.loading) {
@@ -25,14 +26,17 @@ class Product extends Component {
         <Container className="product-div">
           <h2 className="text-center" >ALL PRODUCTS</h2>
           <hr />
-          <Row className="">
-            <CardGroup>
+          <Row>
+          {/* className="overflow-autos" */}
+            <CardGroup className="justify-content-center ">
 
               {products.map((product) => (
                 <Link key={product.productId}  to={`/admin/products/${product.productId}`}>
-                  <Col className="mb-4" xs={12} md={6} lg={4}>
-                    <Card className="text-center card" style={{ width: '20rem', height: '28rem' }}>
-                      {product.Product_images.map(Product_image => ((Product_image) ? <Card.Img key={Product_image.imageId} className="p-2" variant="top" src={Product_image.imageUrl} alt="Card image cap" /> : ''))}
+                  <Col className="mb-4" xs={12} sm={12} md={12} lg={4}>
+                    <Card className="text-center card" style={{ width: '20rem', height: '30rem' }}>
+                      {product.Product_images.map((Product_image, i) => (
+                        (Product_image && i === 0) ? <Card.Img key={Product_image.imageId} className="p-2" variant="top" src={Product_image.imageUrl} alt="Card image cap" height="200" /> : ''))}
+                      {/* {product.Product_images.map(Product_image => ((Product_image) ? <Card.Img key={Product_image.imageId} className="p-2" variant="top" src={Product_image.imageUrl} alt="Card image cap" /> : ''))} */}
 
                       <Card.Body>
                         <Card.Title>
@@ -41,7 +45,7 @@ class Product extends Component {
                           {product.productPrice}
                         </Card.Title>
                         <Card.Text>
-                          {(product['productDescription'].length > 95) ? product['productDescription'].slice(0, 90) : product['productDescription'].slice(0, 5)}
+                          {(product['productDescription'].length > 95) ? `${product['productDescription'].slice(0, 90)} ...` : product['productDescription'].slice(0, 5)}
                         </Card.Text>
                         <Button variant="success">
                           <FontAwesomeIcon icon={faCartArrowDown} />

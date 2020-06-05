@@ -16,7 +16,6 @@ import Checkout from './Components/users/Checkout';
 import Contact from './Components/users/Contact';
 import Product from './Components/Admin/Product';
 import SideBar from './Components/layout/Sidebar';
-// import Loading from './Components/layout/Loading';
 import classNames from "classnames";
 import { Container } from "react-bootstrap";
 import Loading from './Components/layout/Loading';
@@ -38,7 +37,7 @@ class App extends Component {
 
   updateWidth() {
     const width = window.innerWidth;
-    const widthLimit = 768;
+    const widthLimit = 988;
     const isMobile = width <= widthLimit;
     const wasMobile = this.previousWidth <= widthLimit;
 
@@ -77,7 +76,7 @@ class App extends Component {
           <SideBar toggle={this.toggle} isOpen={this.state.isOpen} />
           <Container
             fluid
-            className={classNames("content", { "is-open": this.props.isOpen })}
+            // className={classNames("content", { "is-open": this.props.isOpen })}
           >
             <NavBar toggle={this.toggle} />
 

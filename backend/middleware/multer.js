@@ -11,7 +11,6 @@ const MIME_TYPES = {
 const config = {
   storage: multer.diskStorage({
     destination(req, file, callback) {
-      console.log(req.files);
       if (req.files.length > 4) {
         return callback({ errorMessage: 'Length is more than 5' }, false);
       }

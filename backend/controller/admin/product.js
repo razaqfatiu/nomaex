@@ -12,6 +12,7 @@ module.exports = {
           // include: ['product-images']
 
         })
+        if (getAllProducts.length === 0) return res.status(400).json({ respose: 'No Products' })
         // console.log(Product)
         return res.status(200).json({ getAllProducts });
 

@@ -2,7 +2,7 @@
 // 'use strict';
 
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('products', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Products', {
     productId: {
       type: Sequelize.INTEGER,
       primaryKey: true,
@@ -18,7 +18,7 @@ module.exports = {
       allowNull: false,
     },
     productPrice: {
-      type: Sequelize.STRING,
+      type: Sequelize.INTEGER,
       allowNull: false,
     },
     unit: {
@@ -29,7 +29,7 @@ module.exports = {
       type: Sequelize.INTEGER,
       onDelete: 'CASCADE',
       references: {
-        model: 'categories',
+        model: 'Categories',
         key: 'categoryId',
       },
     },
@@ -37,7 +37,7 @@ module.exports = {
       type: Sequelize.INTEGER,
       onDelete: 'CASCADE',
       references: {
-        model: 'users',
+        model: 'Users',
         key: 'userId',
       },
     },
@@ -60,5 +60,5 @@ module.exports = {
   }),
 
   // eslint-disable-next-line arrow-body-style
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('products'),
+  down: (queryInterface, Sequelize) => queryInterface.dropTable('Products'),
 };
