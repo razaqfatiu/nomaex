@@ -43,8 +43,10 @@ class SignIn extends Component {
     // if(loading === false) {
     //   auth = this.props.auth
     // }
+    const { data } = auth.payload
 
-    console.log(authError)
+
+    // console.log()
     // auth.map(e => console.log(e.data))
     // console.log(auth.payload.status);
     // if(auth.payload.status === 200 ) return <Redirect to="/admin" />

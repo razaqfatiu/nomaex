@@ -119,12 +119,13 @@ module.exports = {
         // res.setHeader('Cache-Control', 'private')
 
         // res.cookie('login', token,
-        res.cookie('jwtsignin', token, {
+        res.cookie('token', token, {
           maxAge: 60 * 60 * 1000, // 1 hour
-          httpOnly: false,
-          secure: true,
-          sameSite: true,
-        });
+          httpOnly: true,
+          secure: false,
+          // sameSite: true,
+        })
+        // .send({ token });
         // )
         // res.send('done');
         return res.status(200).json({
