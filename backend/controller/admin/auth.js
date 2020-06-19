@@ -6,8 +6,8 @@ const { check, validationResult } = require('express-validator');
 const { Op } = require('sequelize');
 
 const models = require('../../models/index');
-const User = require('../../models/user-account');
-
+const crypto = require('crypto');
+const nodeMailer = require('../../config/nodemailer');
 
 module.exports = {
   signUpValidator: [
@@ -103,7 +103,7 @@ module.exports = {
             error: 'Incorrect email or password',
           });
         }
-      
+
         if (!getUser[0].dataValues.isAdmin) {
           res.status(400).json({ error: 'Admin accounts only' });
         }
@@ -174,5 +174,112 @@ module.exports = {
       }
     })();
   },
+  forgotPassword(req, res) {
+    (async () => {
+
+      try {
+        const { email } = req.body
+        const checkIfUserExists = await models.User.findAll({
+          where: {
+            [Op.and]: [
+              { email },
+              { deletedAt: null },
+            ],
+          },
+        });
+        if (checkIfUserExists.length < 1) {
+          return res.status(401).json({ error: 'Register an account' });
+        }
+        const userDetails = checkIfUserExists[0].dataValues;
+        const { firstName, email: userEmail } = userDetails
+        const user = {};
+        user.name = firstName; user.email = userEmail
+        const genToken = await crypto.randomBytes(20)
+        const token = user.token = genToken.toString('hex');
+
+        const updateUserWithToken = await models.User.update({
+          resetPasswordToken: token,
+          resetPasswordExpires: Date.now() + 600000
+        }, {
+          returning: true,
+          where: { email: userEmail }
+        });
+
+        console.log(updateUserWithToken);
+
+        const sendEmail = await nodeMailer(req, user);
+
+        // console.log(sendEmail, user)
+        res.status(200).json({
+          sendEmail
+        })
+      }
+      catch (error) {
+        console.log(error)
+      }
+    })()
+  },
+  passwordReset(req, res) {
+    (async () => {
+      try {
+        const { token } = req.body
+        // const checkUserWithToken = await 
+        models.User.findOne({
+          where: {
+            resetPasswordToken: token,
+            resetPasswordExpires: {
+              [Op.gt]: Date.now()
+            }
+          },
+          function(err, user) {
+            if (!user) {
+              return res.status(400).json({ response: 'Password reset token is invalid or has expired.' })
+            }
+            if (!(req.body.newPassword === req.body.verifyPassword)) {
+              return res.status(400).json({ response: 'The new password must match.' })
+            }
+    
+            user.password = req.body.password;
+            user.resetPasswordToken = undefined;
+            user.resetPasswordExpires = undefined;
+    
+            user.save(function(err) {
+              req.logIn(user, function(err) {
+                done(err, user);
+              });
+            });
+          }
+        });
+        
+        
+        // if (!checkUserWithToken) {
+        //   return res.status(400).json({ response: 'Password reset token is invalid or has expired.' })
+        // }
+        // if (!(req.body.newPassword === req.body.verifyPassword)) {
+        //   return res.status(400).json({ response: 'The new password must match.' })
+        // }
+        
+        // const user = {}
+        // const hashedPassword = await bcrypt.hash(password, 10);
+        // const resetPasswordToken = undefined;
+        // const resetPasswordExpires = undefined
+
+        // const updateUsersWithoutToken = await models.User.update({
+
+        // })
+        // const updateUserPassword = await models.User.update({
+        //   resetPasswordToken,
+        //   resetPasswordExpires,
+        // }, {
+        //   returning: true,
+        //   where: { email: userEmail }
+        // });
+
+      }
+      catch (error) {
+        console.log(error)
+      }
+    })()
+  }
 
 };

@@ -10,6 +10,8 @@ const authReducer = (state = initState, action) => {
       console.log('signup success');
       return {
         ...state,
+        payload: action.payload,
+        loading: action.loading,
         authError: null
       };
     case 'SIGNUP_FAILURE':
@@ -28,6 +30,34 @@ const authReducer = (state = initState, action) => {
       };
     case 'SIGNIN_FAILURE':
       console.log('signin failed')
+      return {
+        ...state,
+        authError: action.error.response
+      }
+    case 'FORGOT_PASSWORD_SUCCESS':
+      console.log('forgot password success')
+      return {
+        ...state,
+        payload: action.payload,
+        loading: action.loading,
+        authError: null
+      }
+    case 'FORGOT_PASSWORD_FAILURE':
+      console.log('Forgot password failed')
+      return {
+        ...state,
+        authError: action.error.response
+      }
+    case 'RESET_PASSWORD_SUCCESS':
+      console.log('Reset password success')
+      return {
+        ...state,
+        payload: action.payload,
+        loading: action.loading,
+        authError: null
+      }
+    case 'RESET_PASSWORD_FAILURE':
+      console.log('Reset password failed')
       return {
         ...state,
         authError: action.error.response

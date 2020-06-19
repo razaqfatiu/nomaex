@@ -80,7 +80,7 @@ class SignIn extends Component {
               </div>
               <div>
                 {/* Forgot password */}
-                <a href="">Forgot password?</a>
+                <a href="/forgot-password">Forgot password?</a>
               </div>
             </div>
 

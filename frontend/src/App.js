@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import SignIn from './Components/auth/signIn';
 import SignUp from './Components/auth/signup';
+import ForgotPassword from './Components/auth/ForgotPassword';
+import ResetPassword from './Components/auth/ResetPassword';
+
 import NavBar from './Components/layout/Navbar';
 import ProductUpload from './Components/Admin/ProductUpload';
 import Home from './Components/Admin/Home'
@@ -95,6 +98,8 @@ class App extends Component {
               {/* <Route path="/admin" component={Home} /> */}
               <Route path="/signin" component={SignIn} />
               <Route path="/signup" component={SignUp} />
+              <Route path="/forgot-password" component={ForgotPassword} />
+              <Route path="/reset-password/:token" component={ResetPassword} />
               
               <Route path="/admin/product-upload" component={ProductUpload} />
               <Route path="/admin/products/all" component={Product} />

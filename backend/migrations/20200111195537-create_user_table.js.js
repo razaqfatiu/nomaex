@@ -37,7 +37,15 @@ module.exports = {
     },  
     password: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: true,
+    },
+    resetPasswordToken: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
+    resetPasswordExpires: {
+      type: Sequelize.DATE,
+      allowNull: true,
     },
     isAdmin: {
       type: Sequelize.BOOLEAN,
