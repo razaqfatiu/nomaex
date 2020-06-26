@@ -46,8 +46,8 @@ class NavBar extends Component {
         </Button>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          <SignedInLinks />
-          {/* <SignedOutLink /> */}
+          {/* <SignedInLinks /> */}
+          <SignedOutLink />
         </Navbar.Collapse>
       </Navbar>
     );

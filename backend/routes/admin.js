@@ -1,6 +1,6 @@
 const express = require('express');
 const {
-  createAdmin, adminSignIn, signUpValidator, devcreateAdmin, forgotPassword
+  createAdmin, adminSignIn, signUpValidator, devcreateAdmin, forgotPassword, passwordReset
 } = require('../controller/admin/auth');
 const { auth } = require('../middleware/auth');
 const {
@@ -24,7 +24,7 @@ adminRouter.post('/products/one', getOneProduct)
 adminRouter.patch('/product', multer, updateProduct)
 adminRouter.delete('/product', deleteProduct)
 
-adminRouter.patch('/auth/forgot-password', forgotPassword)
+adminRouter.post('/auth/forgot-password', forgotPassword)
 adminRouter.patch('/auth/reset-password', passwordReset)
 
 

@@ -188,7 +188,7 @@ module.exports = {
           },
         });
         if (checkIfUserExists.length < 1) {
-          return res.status(401).json({ error: 'Register an account' });
+          return res.status(401).json({ error: 'Account not found, Create an account' });
         }
         const userDetails = checkIfUserExists[0].dataValues;
         const { firstName, email: userEmail } = userDetails
@@ -224,7 +224,7 @@ module.exports = {
       try {
         const { token } = req.body
         // const checkUserWithToken = await 
-        models.User.findOne({
+        const resetPassword = await models.User.findOne({
           where: {
             resetPasswordToken: token,
             resetPasswordExpires: {
@@ -250,6 +250,7 @@ module.exports = {
             });
           }
         });
+        res.status(201).json({ resetPassword })
         
         
         // if (!checkUserWithToken) {

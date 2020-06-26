@@ -50,7 +50,7 @@ export const resetPassword = (credentials) => {
     return async (dispatch, getState) => {
         try {
             let loading = getState().auth.loading = true
-            const resetPassword = await axios.post(`${url}/admin/auth/reset-password`, credentials, {withCredentials: true})
+            const resetPassword = await axios.patch(`${url}/admin/auth/reset-password`, credentials, {withCredentials: true})
             loading = getState().auth.loading = false
             dispatch({ type: 'RESET_PASSWORD_SUCCESS', payload: resetPassword, loading })
         }
