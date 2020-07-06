@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFacebookF, faTwitter, faLinkedin, faInstagram, } from "@fortawesome/free-brands-svg-icons"
 import './footer.scss'
-import { Navbar, Button, Nav, Container, Row, Col } from "react-bootstrap";
+import { Navbar, Button, Nav, Container, Row, Col, } from "react-bootstrap";
 
 
 export default class Footer extends Component {
@@ -19,7 +19,7 @@ export default class Footer extends Component {
             <Col className="text-right foot-right">
               <ul>
                 <li>
-                  <FontAwesomeIcon icon={faFacebookF} className="white-text mr-md-5 mr-3 footer-element" color="white" size="lg" />
+                  <a href="https://web.facebook.com/nomaex/?_rdc=1&_rdr"><FontAwesomeIcon icon={faFacebookF} className="white-text mr-md-5 mr-3 footer-element" color="white" size="lg" /></a>
                 </li>
                 <li>
                   <FontAwesomeIcon icon={faTwitter} className="white-text mr-md-5 mr-3 footer-element" color="white" size="lg" />

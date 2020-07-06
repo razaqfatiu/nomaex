@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'products',
+        model: 'Products',
         key: 'productId',
       },
       onDelete: 'CASCADE',
@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.INTEGER,
       references: {
-        model: 'users',
+        model: 'Users',
         key: 'userId',
       },
       onDelete: 'CASCADE',

@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     categoryId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'categories',
+        model: 'Categories',
         key: 'categoryId',
       },
       onDelete: 'CASCADE',
@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     uploadedBy: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'users',
+        model: 'Users',
         key: 'userId',
       },
       onDelete: 'CASCADE',

@@ -46,23 +46,18 @@ class ProductDetails extends Component {
         <hr />
         <Row>
           <Col xs={12} sm={12} lg={6} className="product-details-left">
+          <Carousel>
             {product.Product_images.map(productImage => (
-              <Carousel key={productImage.imageId}>
-                <Carousel.Item>
+                <Carousel.Item key={productImage.imageId}>
                   <img
-                    className=""
+                    className="d-block w-100"
                     src={productImage.imageUrl}
-                    alt={`Slide ${productImage.imageId}`}
+                    alt={`Product ${productImage.imageId}re23782rhshf834fejsew9e image`}
                   />
-                  <Carousel.Caption>
-                    <h3>First slide label</h3>
-                    <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-                  </Carousel.Caption>
                 </Carousel.Item>
-
-              </Carousel>
+              
             ))}
-
+            </Carousel>
           </Col>
           <Col xs={12} sm={12} lg={6} className="product-details-right" >
             <div>
@@ -103,7 +98,7 @@ class ProductDetails extends Component {
 const mapStateToProps = (state, ownProps) => {
   const id = parseInt(ownProps.match.params.id);
   const products = state.product.products;
-  const product = products.filter((prod) => prod.productId === id )[0]
+  const product = products.filter((prod) => prod.productId === id)[0]
   return {
     product,
     products: state.product.products

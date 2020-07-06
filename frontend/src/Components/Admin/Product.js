@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getAllProducts } from '../../Store/actions/productAction'
 import Loading from '../layout/Loading'
-import { Button, Nav, Card, Container, Row, Col, CardGroup, ButtonGroup } from "react-bootstrap";
+import { Button, Nav, Card, Container, Row, Col, CardGroup, ButtonGroup, Carousel } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { Link } from 'react-router-dom'
@@ -27,11 +27,10 @@ class Product extends Component {
           <h2 className="text-center" >ALL PRODUCTS</h2>
           <hr />
           <Row>
-          {/* className="overflow-autos" */}
+            {/* className="overflow-autos" */}
             <CardGroup className="justify-content-center ">
-
               {products.map((product) => (
-                <Link key={product.productId}  to={`/admin/products/${product.productId}`}>
+                <Link key={product.productId} to={`/admin/products/${product.productId}`}>
                   <Col className="mb-4" xs={12} sm={12} md={12} lg={4}>
                     <Card className="text-center card" style={{ width: '20rem', height: '30rem' }}>
                       {product.Product_images.map((Product_image, i) => (

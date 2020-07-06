@@ -43,6 +43,7 @@ export const updateAProduct = (credentials) => {
   return async (dispatch, getState) => {
     try {
       let loading = getState().product.loading = true;
+      console.log(credentials)
       const updateAProduct = await axios.patch(`${url}/admin/product`, credentials)
       console.log(updateAProduct);
       // if (updateAProduct) {
