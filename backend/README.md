@@ -1,2 +1,0 @@
-# nomaex
-Nomaex E-Commerce
