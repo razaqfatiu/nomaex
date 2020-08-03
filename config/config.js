@@ -6,7 +6,7 @@ module.exports = {
     password: process.env.dbPassword || null,
     database: process.env.dbName || 'development',
     host: process.env.dbHost || '127.0.0.1',
-    dialect: 'mysql',
+    dialect: 'postgres',
     operatorsAliases: 0,
   },
   production: {
@@ -14,7 +14,7 @@ module.exports = {
     password: process.env.dbPassword || null,
     database: process.env.dbName || 'development',
     host: process.env.dbHost || '127.0.0.1',
-    dialect: 'mysql',
+    dialect: 'postgres',
     operatorsAliases: 0,
   },
 };
