@@ -6,12 +6,14 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
-const debug = require('debug')('app');
+// const http = require('http');
+// const debug = require('debug')('app');
 const userRouter = require('./routes/user');
 const adminRouter = require('./routes/admin');
 const cors = require('cors');
 
 const app = express();
+// const server = http.createServer(app);
 const port = process.env.PORT || '5000';
 const db = require('./models/index');
 const { sequelize } = db;
@@ -20,9 +22,9 @@ const { sequelize } = db;
 (async function () {
   try {
     await sequelize.authenticate();
-    debug('connected to Db on 3306......');
+    console.log('connected to Db on 3306......');
   } catch (err) {
-    debug(`db error: ${err}`);
+    console.log(`db error: ${err}`);
   }
 }());
 
@@ -74,5 +76,10 @@ app.use((err, req, res) => {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// server.listen(port, () => {
+//   debug(`Listening on port ${port}.....`);
+// });
+
 
 module.exports = app;

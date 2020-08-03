@@ -2,9 +2,10 @@
   "name": "nomaex",
   "version": "1.0.0",
   "description": "farm e-commerce",
-  "main": "server.js",
+  "private": true,
+  "main": "app.js",
   "scripts": {
-    "start": "DEBUG=app nodemon app.js",
+    "start": "DEBUG=app nodemon ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ./bin/www.js",
     "migrate": "./node_modules/.bin/sequelize db:migrate",
@@ -38,6 +39,8 @@
     "multer": "^1.4.2",
     "mysql2": "^2.1.0",
     "nodemailer": "^6.4.8",
+    "pg": "^8.3.0",
+    "pg-hstore": "^2.3.3",
     "sequelize": "^5.18.4",
     "sequelize-cli": "^5.5.1",
     "uuid": "^8.3.0"
