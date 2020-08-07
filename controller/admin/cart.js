@@ -7,6 +7,7 @@ module.exports = {
       try {
         let addItemToCart
         let { productId, quantity } = req.body
+        const createdAt = new Date()
         const customerId = req.user.id
         const checkIfProductExistInTheCart = await models.Cart.findAll({
           where: {
@@ -17,7 +18,7 @@ module.exports = {
           // include: [{ model: models.Product }]
         });
         let checkIfProductExistInTheCartResult
-        const newItemsToCart = { productId, customerId, quantity: parseInt(quantity), checkedOut: false }
+        const newItemsToCart = { productId, customerId, quantity: parseInt(quantity), checkedOut: false, createdAt }
         if (checkIfProductExistInTheCart.length > 0) {
           checkIfProductExistInTheCartResult = checkIfProductExistInTheCart
           const currentQuantity = parseInt(checkIfProductExistInTheCart[0].dataValues.quantity)

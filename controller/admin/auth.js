@@ -28,15 +28,15 @@ module.exports = {
   ],
 
   createAdmin(req, res) {
-    const {
-      firstName, lastName, email, address1, address2, state, phoneNumber, password,
-    } = req.body;
-    const isAdmin = true;
-
-    const userId = req.user.id;
-    const { token, isAdministrator } = req.user;
     (async () => {
       try {
+        const {
+          firstName, lastName, email, address1, address2, state, phoneNumber, password,
+        } = req.body;
+        const isAdmin = true;
+
+        const userId = req.user.id;
+        const { token, isAdministrator } = req.user;
         const checkIfNewuserExists = await models.User.findAll({
           where: {
             [Op.and]: [
@@ -82,15 +82,14 @@ module.exports = {
     })();
   },
   signUp(req, res) {
-    const {
-      firstName, lastName, email, address1, address2, state, phoneNumber, password,
-    } = req.body;
-    const isAdmin = false;
 
-    // const userId = req.user.id;
-    // const { token, isAdministrator } = req.user;
     (async () => {
       try {
+        const {
+          firstName, lastName, email, address1, address2, state, phoneNumber, password,
+        } = req.body;
+        const isAdmin = false;
+        const lastLogin = createdAt = new Date()
         const checkIfNewuserExists = await models.User.findAll({
           where: {
             [Op.and]: [
@@ -114,6 +113,8 @@ module.exports = {
           phoneNumber,
           password: hash,
           isAdmin,
+          lastLogin,
+          createdAt
         };
         // VALIDATION
         const errors = validationResult(req);
@@ -126,6 +127,7 @@ module.exports = {
           message: 'Account successfully created',
         });
       } catch (err) {
+        console.log(err)
         return res.status(500).json({ errorResponse: err });
       }
     })();
@@ -186,7 +188,7 @@ module.exports = {
         // }
         const userPayload = {
           userId: getUser[0].dataValues.userId,
-          // email: getUser[0].dataValues.email,
+          email: getUser[0].dataValues.email,
           isAdministrator: getUser[0].dataValues.isAdmin,
         }
 

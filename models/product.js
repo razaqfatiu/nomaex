@@ -14,12 +14,17 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     productDescription: {
-      type: DataTypes.STRING(1000),
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     productPrice: {
       type: DataTypes.INTEGER,
       allowNull: false,
+    },
+    productDiscount: {
+      type: DataTypes.DECIMAL,
+      defaultValue: 0.00,
+      allowNull: false
     },
     productShipping: {
       type: DataTypes.INTEGER,

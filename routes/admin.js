@@ -2,6 +2,7 @@ const express = require('express');
 const {
   createAdmin,
   signIn,
+  signUp,
   signUpValidator,
   devcreateAdmin,
   forgotPassword,
@@ -26,26 +27,28 @@ const { addItemsToCart, getItemsInUserCart, removeItemFromCart } = require('../c
 
 const adminRouter = express.Router();
 
-
+// USER
 adminRouter.post('/dev-create-admin', devcreateAdmin);
 adminRouter.post('/create-admin', auth, signUpValidator, createAdmin);
 adminRouter.post('/signin', signIn);
+adminRouter.post('/signup', signUp);
 adminRouter.get('/auth', authenticate)
 adminRouter.get('/sign-out', signOut)
-
-adminRouter.post('/product', auth, multer, postProduct);
-// auth, uploadValidator,
-adminRouter.get('/categories', listAllCategories)
-
-adminRouter.get('/products', getAllProducts)
-adminRouter.get('/products/:productId', getOneProduct)
-adminRouter.get('/category/:categoryId', getProductsByCategory)
-adminRouter.patch('/product/:productId', auth, multer, updateProduct)
-adminRouter.delete('/product', deleteProduct)
-
 adminRouter.post('/auth/forgot-password', forgotPassword)
 adminRouter.patch('/auth/reset-password', passwordReset)
 
+//PRODUCT
+adminRouter.post('/product', auth, multer, postProduct);
+adminRouter.patch('/product/:productId', auth, multer, updateProduct)
+adminRouter.get('/products', getAllProducts)
+adminRouter.get('/products/:productId', getOneProduct)
+adminRouter.delete('/product/:productId', auth, deleteProduct)
+
+// auth, uploadValidator,
+adminRouter.get('/categories', listAllCategories)
+adminRouter.get('/category/:categoryId', getProductsByCategory)
+
+//CART
 adminRouter.post('/product/cart', auth, addItemsToCart)
 adminRouter.get('/product/cart', auth, getItemsInUserCart)
 adminRouter.delete('/product/cart/:cartId', auth, removeItemFromCart)
