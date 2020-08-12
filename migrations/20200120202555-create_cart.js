@@ -1,24 +1,29 @@
-/* eslint-disable no-unused-vars */
+'use strict';
 
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('orders', {
-    orderId: {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Carts', {
+    cartId: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true,
       allowNull: false,
     },
-    shoppingCartId: {
+    shoppingCart: {
       type: Sequelize.INTEGER,
-      onDelete: 'CASCADE',
+      allowNull: false,
       references: {
         model: 'shopping_carts',
         key: 'shoppingCartId',
       },
+      onDelete: 'CASCADE',
     },
-    amount: {
+    productId: {
       type: Sequelize.INTEGER,
-      allowNull: false
+      onDelete: 'CASCADE',
+      references: {
+        model: 'Products',
+        key: 'productId',
+      },
     },
     customerId: {
       type: Sequelize.INTEGER,
@@ -28,13 +33,9 @@ module.exports = {
         key: 'userId',
       },
     },
-    status: {
-      type: Sequelize.INTEGER,
-      onDelete: 'CASCADE',
-      references: {
-        model: 'order_statuses',
-        key: 'orderStatusId',
-      },
+    quantity: {
+      allowNull: false,
+      type: Sequelize.INTEGER
     },
     checkedOut: {
       type: Sequelize.BOOLEAN,
@@ -59,5 +60,7 @@ module.exports = {
       defaultValue: null,
     },
   }),
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('orders'),
+
+  down: (queryInterface, Sequelize) => queryInterface.dropTable('Carts'),
+
 };

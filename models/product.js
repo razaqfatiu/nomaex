@@ -22,8 +22,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     productDiscount: {
-      type: DataTypes.DECIMAL,
-      defaultValue: 0.00,
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
       allowNull: false
     },
     productShipping: {
@@ -79,7 +79,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'category'
     });
     models.Product.belongsTo(models.User, {
-      // as: 'users',
       foreignKey: 'uploadedBy'
     });
     models.Product.belongsTo(models.ProductShipping, {

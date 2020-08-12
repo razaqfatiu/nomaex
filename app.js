@@ -19,7 +19,7 @@ const { sequelize } = db;
 (async function () {
   try {
     await sequelize.authenticate();
-    debug('connected to Db on 3306......');
+    debug(`connected to Db on 5432......`);
   } catch (err) {
     debug(`db error: ${err}`);
   }

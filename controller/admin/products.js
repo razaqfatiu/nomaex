@@ -34,7 +34,6 @@ module.exports = {
         const {
           productName, productPrice, productDiscount, productDescription, unit, categoryId, cost, state, country, eta,
         } = req.body;
-        const calcDiscount = parseInt(productDiscount) / 100
         const { files } = req;
         let imageUrl;
         let imageSize;
@@ -55,7 +54,7 @@ module.exports = {
         const { productShippingId: productShipping } = uploadShippingDetails.dataValues
 
         const newProduct = {
-          productName, productPrice, productDiscount: calcDiscount, productDescription, unit, category: categoryId, uploadedBy: userId, productShipping, createdAt
+          productName, productPrice, productDiscount, productDescription, unit, category: categoryId, uploadedBy: userId, productShipping, createdAt
         };
 
         const uploadProduct = await models.Product.create(newProduct);
@@ -73,7 +72,6 @@ module.exports = {
         }
         return res.status(201).json({ message: "Product Uploaded Successfully" });
       } catch (error) {
-        console.log(error)
         return res.status(500).json({ error });
       }
     })();
@@ -87,8 +85,7 @@ module.exports = {
             isDeleted: false
           }
         })
-        if (getAllProducts.length === 0) return res.status(400).json({ respose: 'No Products' })
-        // console.log(Product)
+        if (getAllProducts.length === 0) return res.status(404).json({ respose: 'No Products' })
         return res.status(200).json({ getAllProducts });
 
       }
@@ -159,7 +156,6 @@ module.exports = {
         const {
           productName, productPrice, productDiscount, productDescription, unit, categoryId, cost, state, country, eta, productShipping
         } = req.body;
-        const calcDiscount = parseInt(productDiscount) / 100
         let { productId } = req.params
         const { files } = req;
         let imageUrl;
@@ -181,7 +177,7 @@ module.exports = {
         // const { productShippingId: productShipping } = uploadShippingDetails.dataValues
 
         const updatedProductData = {
-          productName, productPrice, productDiscount: calcDiscount, productDescription, unit, category: categoryId, uploadedBy: userId,
+          productName, productPrice, productDiscount, productDescription, unit, category: categoryId, uploadedBy: userId,
 
         };
         // console.log(newProduct, productId)

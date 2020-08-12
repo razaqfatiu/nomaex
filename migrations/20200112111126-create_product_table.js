@@ -22,8 +22,8 @@ module.exports = {
       allowNull: false,
     },
     productDiscount: {
-      type: Sequelize.DECIMAL,
-      defaultValue: 0.00,
+      type: Sequelize.INTEGER,
+      defaultValue: 0,
       allowNull: false
     },
     productShipping: {

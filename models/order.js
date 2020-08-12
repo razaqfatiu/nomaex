@@ -2,63 +2,74 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-const Order = sequelize.define('Order', {
-  orderId: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-    allowNull: false,
-  },
-  productId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'Products',
-      key: 'productId',
+  const order = sequelize.define('order', {
+    orderId: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
     },
-    onDelete: 'CASCADE',
-  },
-  customerId: {
-    allowNull: false,
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'Users',
-      key: 'userId',
+    shoppingCartId: {
+      type: DataTypes.INTEGER,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'shopping_carts',
+        key: 'shoppingCartId',
+      },
     },
-    onDelete: 'CASCADE',
-  },
-  status: {
-    allowNull: false,
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'OrderStatus',
-      key: 'orderStatusId',
+    amount: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
-    onDelete: 'CASCADE',
-  },
-  createdAt: {
-    allowNull: false,
-    type: DataTypes.DATE,
-  },
-  updatedAt: {
-    allowNull: false,
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW(),
-  },
-  isDeleted: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
-  },
-  deletedAt: {
-    type: DataTypes.DATE,
-    defaultValue: null,
-  },
-}, {});
+    customerId: {
+      allowNull: false,
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Users',
+        key: 'userId',
+      },
+      onDelete: 'CASCADE',
+    },
+    status: {
+      allowNull: false,
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'order_statuses',
+        key: 'orderStatusId',
+      },
+      onDelete: 'CASCADE',
+    },
+    checkedOut: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+    },
+    updatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW(),
+    },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    deletedAt: {
+      type: DataTypes.DATE,
+      defaultValue: null,
+    },
+  }, {});
 
-Order.associate = (models) => {
-  models.Order.belongsTo(models.Product, { foreignKey: 'productId' });
-  models.Order.belongsTo(models.User, { foreignKey: 'customerId' });
-  models.Order.belongsTo(models.OrderStatus, { foreignKey: 'status' });
-};
-  return Order
+  order.associate = (models) => {
+    // models.order.belongsTo(models.Product, { foreignKey: 'productId' });
+    models.order.belongsTo(models.User, { foreignKey: 'customerId' });
+    models.order.belongsTo(models.order_status, { foreignKey: 'status' });
+    models.order.belongsTo(models.shopping_cart, { foreignKey: 'shoppingCartId' });
+    models.order.hasOne(models.order_payment_init, { foreignKey: 'orderId' });
+    models.order.hasOne(models.verify_order_payment, { foreignKey: 'verifyOrderPaymentId' });
+  };
+  return order
 }
