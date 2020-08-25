@@ -58,6 +58,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: false,
     },
+    lastLogin: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -77,10 +81,13 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {});
   User.associate = (models) => {
+    models.User.hasOne(models.order_payment_init, {
+      foreignKey: 'customerId'
+    });
     models.User.hasMany(models.Product, {
       foreignKey: 'productId'
     });
-    models.User.hasMany(models.Order, {
+    models.User.hasMany(models.order, {
       foreignKey: 'orderId'
     });
   };

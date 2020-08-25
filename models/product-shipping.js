@@ -41,8 +41,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
 
   ProductShipping.associate = (models) => {
-    // models..belongsTo(models.Order, { foreignKey: 'orderStatusId' });
-    models.Product.hasOne(models.Product,
+    models.ProductShipping.hasOne(models.Product,
       {
         // as: 'shipping',
         foreignKey: 'productShipping',

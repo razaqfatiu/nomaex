@@ -8,6 +8,15 @@ module.exports = {
       autoIncrement: true,
       allowNull: false,
     },
+    shoppingCart: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'shopping_carts',
+        key: 'shoppingCartId',
+      },
+      onDelete: 'CASCADE',
+    },
     productId: {
       type: Sequelize.INTEGER,
       onDelete: 'CASCADE',

@@ -14,12 +14,12 @@ module.exports = {
         const decodedToken = await jwt.verify(token, process.env.TOKEN_SECRET);
         const { userId, email, isAdministrator } = decodedToken;
         req.user = { id: userId, email, isAdministrator, token };
-        // console.log(req.user)
         if (req.body.userId && req.body.userId !== userId) {
           return res.status(401).json({ message: 'Invalid User' });
         }
         return next();
       } catch (error) {
+        console.log(error)
         res.status(401).json({
           error,
         });

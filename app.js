@@ -6,25 +6,22 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
-// const http = require('http');
-// const debug = require('debug')('app');
+const debug = require('debug')('app');
 const userRouter = require('./routes/user');
 const adminRouter = require('./routes/admin');
 const cors = require('cors');
 
 const app = express();
-// const server = http.createServer(app);
 const port = process.env.PORT || '5000';
 const db = require('./models/index');
 const { sequelize } = db;
-// const { sequelize } = require('./models/connection');
 
 (async function () {
   try {
     await sequelize.authenticate();
-    console.log('connected to Db on 3306......');
+    debug(`connected to Db on 5432......`);
   } catch (err) {
-    console.log(`db error: ${err}`);
+    debug(`db error: ${err}`);
   }
 }());
 
@@ -35,7 +32,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(logger('tiny'));
-// app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -56,8 +52,10 @@ app.use('/media', express.static(path.join(__dirname, 'media')));
 app.use('/product-images', express.static(path.join(__dirname, 'media/product-images')));
 
 
-app.use('/', userRouter);
+app.use('/api/v1/user', userRouter);
 app.use('/api/v1', adminRouter);
+app.use('/', (req, res) => res.send('Welcome to Nomaex API'));
+
 app.get('*', function(req, res){
   res.status(404).send('NotFound');
 });
@@ -76,10 +74,5 @@ app.use((err, req, res) => {
   res.status(err.status || 500);
   res.render('error');
 });
-
-// server.listen(port, () => {
-//   debug(`Listening on port ${port}.....`);
-// });
-
 
 module.exports = app;

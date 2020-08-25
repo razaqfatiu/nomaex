@@ -9,6 +9,15 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
       allowNull: false,
     },
+    shoppingCart: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'shopping_cart',
+        key: 'shoppingCartId',
+      },
+      onDelete: 'CASCADE',
+    },
     productId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -30,11 +39,6 @@ module.exports = (sequelize, DataTypes) => {
     quantity: {
       allowNull: false,
       type: DataTypes.INTEGER
-    },
-    checkedOut: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false
     },
     createdAt: {
       allowNull: false,
@@ -58,6 +62,9 @@ module.exports = (sequelize, DataTypes) => {
   Cart.associate = (models) => {
     models.Cart.belongsTo(models.Product, { foreignKey: 'productId' });
     models.Cart.belongsTo(models.User, { foreignKey: 'customerId' });
+    models.Cart.belongsTo(models.shopping_cart, {
+      foreignKey: 'shoppingCart'
+    });
     // models.Cart.belongsTo(models.ProductShipping, { foreignKey: 'productShipping' });
   };
   return Cart

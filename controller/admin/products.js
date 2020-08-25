@@ -26,13 +26,13 @@ module.exports = {
       try {
         const userId = req.user.id;
         const { isAdministrator } = req.user;
-
+        const createdAt = new Date()
         if (!isAdministrator) {
           return res.status(400).json({ message: 'Only Admins can post products' });
         }
 
         const {
-          productName, productPrice, productDescription, unit, categoryId, cost, state, country, eta,
+          productName, productPrice, productDiscount, productDescription, unit, categoryId, cost, state, country, eta,
         } = req.body;
         const { files } = req;
         let imageUrl;
@@ -48,13 +48,13 @@ module.exports = {
           return res.status(422).json({ errors: errors.array() });
         }
 
-        const newProductShippingInfo = { cost, state, country, eta }
+        const newProductShippingInfo = { cost, state, country, eta, createdAt }
 
         const uploadShippingDetails = await models.ProductShipping.create(newProductShippingInfo)
         const { productShippingId: productShipping } = uploadShippingDetails.dataValues
 
         const newProduct = {
-          productName, productPrice, productDescription, unit, category: categoryId, uploadedBy: userId, productShipping
+          productName, productPrice, productDiscount, productDescription, unit, category: categoryId, uploadedBy: userId, productShipping, createdAt
         };
 
         const uploadProduct = await models.Product.create(newProduct);
@@ -66,13 +66,12 @@ module.exports = {
           mimeType = i.mimetype;
           fileName = i.filename;
           models.Product_image.create({
-            imageUrl, imageSize, mimeType, productId, fileName
+            imageUrl, imageSize, mimeType, productId, fileName, createdAt
             // imageUrl, imageSize, mimeType, productId,
           });
         }
         return res.status(201).json({ message: "Product Uploaded Successfully" });
       } catch (error) {
-        console.log(error)
         return res.status(500).json({ error });
       }
     })();
@@ -86,8 +85,7 @@ module.exports = {
             isDeleted: false
           }
         })
-        if (getAllProducts.length === 0) return res.status(400).json({ respose: 'No Products' })
-        // console.log(Product)
+        if (getAllProducts.length === 0) return res.status(404).json({ respose: 'No Products' })
         return res.status(200).json({ getAllProducts });
 
       }
@@ -114,7 +112,7 @@ module.exports = {
             { model: models.ProductShipping }
           ]
         })
-        if (getOneProduct.length < 1) return res.status(404).json({ getOneProduct: "cannot find this Product you are searching for" });
+        if (getOneProduct.length < 1) return res.status(404).json({ getOneProduct: "Cannot find this Product you are searching for" });
         return res.status(200).json({ getOneProduct });
       }
       catch (error) {
@@ -149,17 +147,16 @@ module.exports = {
     (async () => {
       try {
         const userId = 2 || req.user.id;
-        // const { isAdministrator } = req.user;
+        const { isAdministrator } = req.user;
 
-        // if (!isAdministrator) {
-        //   return res.status(400).json({ message: 'Only Admins can post products' });
-        // }
+        if (!isAdministrator) {
+          return res.status(400).json({ message: 'Only Admins can post products' });
+        }
 
         const {
-          productName, productPrice, productDescription, unit, categoryId, cost, state, country, eta, productShipping
+          productName, productPrice, productDiscount, productDescription, unit, categoryId, cost, state, country, eta, productShipping
         } = req.body;
         let { productId } = req.params
-        // let { } = req.body
         const { files } = req;
         let imageUrl;
         let imageSize;
@@ -180,15 +177,11 @@ module.exports = {
         // const { productShippingId: productShipping } = uploadShippingDetails.dataValues
 
         const updatedProductData = {
-          productName, productPrice, productDescription, unit, category: categoryId, uploadedBy: userId,
+          productName, productPrice, productDiscount, productDescription, unit, category: categoryId, uploadedBy: userId,
 
         };
         // console.log(newProduct, productId)
 
-        const updateProduct = await models.Product.update(
-          updatedProductData,
-          { returning: true, where: { productId } }
-        );
 
         const returnUpdatedProduct = await models.Product.findByPk(productId, {
           include: [{ model: models.Product_image }]
@@ -206,8 +199,14 @@ module.exports = {
         const getAssociatedproductImage = await models.Product_image.findAll({ where: { productId } })
 
         if (getAssociatedproductImage.length !== productImages.length) {
-          return res.status(400).json({ response: `Select ${getAssociatedproductImage.length} image(s)` });
+          return res.status(400).json({ response: `Select ${getAssociatedproductImage.length} Image(s)` });
         }
+
+
+        const updateProduct = await models.Product.update(
+          updatedProductData,
+          { returning: true, where: { productId } }
+        );
 
         getAssociatedproductImage.map((associatedImage, i) => {
           models.Product_image.update(
@@ -232,8 +231,8 @@ module.exports = {
   deleteProduct(req, res) {
     (async () => {
       try {
-        const { productId } = req.body
-        const markAsDeleted = await models.Product.update({ isDeleted: true, deletedAt: Date.now }, {
+        const { productId } = req.params
+        const markAsDeleted = await models.Product.update({ isDeleted: true, deletedAt: new Date() }, {
           where: {
             productId
           }
@@ -243,45 +242,17 @@ module.exports = {
 
         getAssociatedproductImage.map((associatedImage, i) => {
           models.Product_image.update(
-            { isDeleted: true, deletedAt: Date.now },
+            { isDeleted: true, deletedAt: new Date() },
             { where: { imageId: associatedImage.imageId } }
           );
         })
         return res.status(204).json({ response: 'Product deleted successfully' })
       }
       catch (error) {
+        console.log(error)
         return res.status(500).json({ error })
       }
     })()
 
-  },
-  addProductToCart(req, res) {
-    (async () => {
-      try {
-        const userId = req.user.id;
-
-        const {
-          productId, customerId, quantity,
-        } = req.body;
-
-        //  VALIDATION
-
-        const errors = validationResult(req.body);
-        if (!errors.isEmpty()) {
-          return res.status(422).json({ errors: errors.array() });
-        }
-
-        const newCart = {
-          productId, customerId, quantity,
-        };
-
-        const addToCart = await models.Cart.create(newCart);
-
-        return res.status(201).json({ result: addToCart });
-      } catch (error) {
-        console.log(error)
-        return res.status(500).json({ error });
-      }
-    })();
   }
 }

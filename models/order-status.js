@@ -2,12 +2,12 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-const OrderStatus = sequelize.define('OrderStatus', {
+const order_status = sequelize.define('order_status', {
   orderStatusId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true,
     allowNull: false,
+    unique: true
   },
   status: {
     type: DataTypes.STRING,
@@ -37,9 +37,8 @@ const OrderStatus = sequelize.define('OrderStatus', {
   },
 }, {});
 
-OrderStatus.associate = (models) => {
-  // models..belongsTo(models.Order, { foreignKey: 'orderStatusId' });
-  models.OrderStatus.hasOne(models.Order,
+order_status.associate = (models) => {
+  models.order_status.hasOne(models.order,
     {
       as: 'orderStatus',
       foreignKey: 'status',
@@ -48,5 +47,5 @@ OrderStatus.associate = (models) => {
       // }
     });
   };
-  return OrderStatus
+  return order_status
 }

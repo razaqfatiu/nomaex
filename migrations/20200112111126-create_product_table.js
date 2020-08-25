@@ -14,12 +14,17 @@ module.exports = {
       allowNull: false,
     },
     productDescription: {
-      type: Sequelize.STRING(1000),
+      type: Sequelize.TEXT,
       allowNull: false,
     },
     productPrice: {
       type: Sequelize.INTEGER,
       allowNull: false,
+    },
+    productDiscount: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0,
+      allowNull: false
     },
     productShipping: {
       type: Sequelize.INTEGER,

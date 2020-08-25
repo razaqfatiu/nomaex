@@ -1,12 +1,12 @@
 'use strict';
 
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('OrderStatus', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('order_statuses', {
     orderStatusId: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true,
-      allowNull: false,
+      unique: true,
     },
     status: {
       type: Sequelize.STRING,
@@ -31,5 +31,5 @@ module.exports = {
     }
   }),
 
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('OrderStatus'),
+  down: (queryInterface, Sequelize) => queryInterface.dropTable('order_statuses'),
 };
