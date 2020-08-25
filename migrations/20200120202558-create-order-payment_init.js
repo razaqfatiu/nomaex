@@ -17,6 +17,15 @@ module.exports = {
         },
         onDelete: 'CASCADE',
       },
+      customerId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'userId',
+        },
+        onDelete: 'CASCADE',
+      },
       authorization_url: {
         allowNull: false,
         type: Sequelize.STRING

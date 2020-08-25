@@ -16,6 +16,15 @@ module.exports = (sequelize, DataTypes) => {
       },
       onDelete: 'CASCADE',
     },
+    customerId: {
+      allowNull: false,
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Users',
+        key: 'userId',
+      },
+      onDelete: 'CASCADE',
+    },
     authorization_url: {
       allowNull: false,
       type: DataTypes.STRING
@@ -39,6 +48,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   order_payment_init.associate = function (models) {
     // associations can be defined here
+    models.order_payment_init.belongsTo(models.User, { foreignKey: 'customerId' });
+
     models.order_payment_init.belongsTo(models.order, {
       // as: 'users',
       foreignKey: 'orderId'

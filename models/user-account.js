@@ -81,6 +81,9 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {});
   User.associate = (models) => {
+    models.User.hasOne(models.order_payment_init, {
+      foreignKey: 'customerId'
+    });
     models.User.hasMany(models.Product, {
       foreignKey: 'productId'
     });

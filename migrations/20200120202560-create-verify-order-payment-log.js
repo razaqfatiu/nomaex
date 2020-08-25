@@ -2,7 +2,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('verify_order_payment_logs', {
-      verify_order_payment_log_id: {
+      verifyOrderPaymentLogId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -18,7 +18,7 @@ module.exports = {
         onDelete: 'CASCADE',
       },
       log: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         get: function () {
           return JSON.parse(this.getDataValue('log'));
         },
@@ -30,7 +30,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       authorization: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         get: function () {
           return JSON.parse(this.getDataValue('authorization'));
         },
@@ -39,7 +39,7 @@ module.exports = {
         },
       },
       customer: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         get: function () {
           return JSON.parse(this.getDataValue('customer'));
         },

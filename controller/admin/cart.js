@@ -34,7 +34,8 @@ module.exports = {
           where: {
             [Op.and]: [{
               productId,
-              customerId
+              customerId,
+              shoppingCart: shoppingCartId
             }]
           },
           // include: [{ model: models.Product }]

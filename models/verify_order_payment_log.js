@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
     },
     log: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       get: function () {
         return JSON.parse(this.getDataValue('log'));
       },
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
     },
     authorization: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       get: function () {
         return JSON.parse(this.getDataValue('authorization'));
       },
@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     customer: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       get: function () {
         return JSON.parse(this.getDataValue('customer'));
       },

@@ -2,13 +2,15 @@ const express = require('express');
 const {
   createAdmin,
   signIn,
+  getUserInfo,
   signUp,
   signUpValidator,
   devcreateAdmin,
   forgotPassword,
   passwordReset,
   signOut,
-  authenticate
+  authenticate,
+  verifyAccount
 } = require('../controller/admin/auth');
 const { auth } = require('../middleware/auth');
 const {
@@ -24,7 +26,7 @@ const {
 const { listAllCategories } = require('../controller/admin/get-categories');
 const multer = require('../middleware/multer');
 const { addItemsToCart, getItemsInUserCart, removeItemFromCart } = require('../controller/admin/cart');
-const { checkOutInit, createOrder, getInitializedOrder } = require('../controller/admin/orders');
+const { createOrder, getInitializedOrder, checkOutPay, verifyCheckOut, getRecentOrders, cancelOrder } = require('../controller/admin/orders');
 
 const adminRouter = express.Router();
 
@@ -35,8 +37,10 @@ adminRouter.post('/signin', signIn);
 adminRouter.post('/signup', signUp);
 adminRouter.get('/auth', authenticate)
 adminRouter.get('/sign-out', signOut)
+adminRouter.patch('/account/activation', verifyAccount)
 adminRouter.post('/auth/forgot-password', forgotPassword)
 adminRouter.patch('/auth/reset-password', passwordReset)
+adminRouter.get('/user/me', auth, getUserInfo)
 
 //PRODUCT
 adminRouter.post('/product', auth, multer, postProduct);
@@ -56,7 +60,12 @@ adminRouter.delete('/product/cart/:cartId', auth, removeItemFromCart)
 
 // CHECKOUT INIT
 adminRouter.post('/cart/order', auth, createOrder)
+adminRouter.post('/order/pay', auth, checkOutPay)
 adminRouter.get('/cart/get-new-order', auth, getInitializedOrder)
-adminRouter.post('/cart/checkout', auth, checkOutInit)
+adminRouter.get('/order/verify', auth, verifyCheckOut)
+adminRouter.delete('/order/cancel', auth, cancelOrder)
+adminRouter.get('/orders/recent', auth, getRecentOrders)
+
+// adminRouter.post('/cart/checkout', auth, checkOutInit)
 
 module.exports = adminRouter;

@@ -1,11 +1,11 @@
 'use strict';
 
 const statuses = [
-  {status: 'success', label: 'Success'},
-  {status: 'cancel', label: 'Cancel'},
-  {status: 'completed', label: 'Completed'},
-  {status: 'awaiting_pickup', label: 'Awaiting Pick-up'},
-  {status: 'pending_payment', label: 'Pending Payment'},
+  { status: 'success', label: 'Success' },
+  { status: 'cancel', label: 'Cancel' },
+  { status: 'awaiting_payment', label: 'Awaiting Payment' },
+  { status: 'payment_completed', label: 'Payment Completed' },
+  { status: 'awaiting_pickup', label: 'Awaiting Pick-up' },
 ];
 const arr = [];
 let status;

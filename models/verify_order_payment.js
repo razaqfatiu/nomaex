@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     metadata: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false
     },
     gateway_response: {

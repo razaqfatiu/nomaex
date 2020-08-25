@@ -7,8 +7,9 @@ const { Op, where } = require('sequelize');
 
 const models = require('../../models/index');
 const crypto = require('crypto');
-const nodeMailer = require('../../config/nodemailer');
+// const nodeMailer = require('../../config/nodemailer');
 const { signAccessToken } = require('../../helper/jwt-helper');
+const { forgotPassword, activateAccount } = require('../../helper/mail');
 
 
 module.exports = {
@@ -103,6 +104,10 @@ module.exports = {
         }
 
         const hash = await bcrypt.hash(password, 10);
+        const genToken = await crypto.randomBytes(20)
+        const user = {};
+        user.name = firstName; user.email = email
+        const token = user.token = genToken.toString('hex');
         const newUser = {
           firstName,
           lastName,
@@ -112,8 +117,10 @@ module.exports = {
           state,
           phoneNumber,
           password: hash,
+          isActive: false,
           isAdmin,
           lastLogin,
+          resetPasswordToken: token,
           createdAt
         };
         // VALIDATION
@@ -121,8 +128,9 @@ module.exports = {
         if (!errors.isEmpty()) {
           return res.status(422).json({ errors: errors.array() });
         }
-        await models.User.sync();
         await models.User.create(newUser);
+        await activateAccount(req, user);
+
         return res.status(201).json({
           message: 'Account successfully created',
         });
@@ -131,6 +139,39 @@ module.exports = {
         return res.status(500).json({ errorResponse: err });
       }
     })();
+  },
+  verifyAccount(req, res) {
+    (async () => {
+      try {
+        const { token } = req.body
+        console.log(token)
+        const verAccount = await models.User.findAll({
+          where: {
+            resetPasswordToken: token,
+          }
+        })
+        if (verAccount.length < 1) {
+          return res.status(401).json({ error: 'Account was previously verified or Activation token is invalid or has expired.' });
+        }
+        const checkifVerifiedBefore = await verAccount[0].dataValues
+        if (checkifVerifiedBefore.resetPasswordToken === '') res.status(400).json({ message: 'Account was verified' });
+        await models.User.update({
+          resetPasswordToken: '',
+          isActive: true,
+          updatedAt: new Date()
+        }, {
+          returning: true,
+          where: {
+            resetPasswordToken: token,
+          }
+        });
+        return res.status(200).json({ message: 'Account Activated Successfully' })
+      }
+      catch (error) {
+        console.log(error)
+        res.status(500).json({ error });
+      }
+    })()
   },
   authenticate(req, res) {
     (async () => {
@@ -175,6 +216,8 @@ module.exports = {
             error: 'Incorrect email or password',
           });
         }
+        const accountActivation = await getUser[0].dataValues
+        if (accountActivation.isActive == false) return res.status(400).json({ message: 'Please refer to the previous email sent to activate your account and retry!' });
         const lastTimeLoggedIn = new Date()
         // const lastTimeLoggedIn = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
         const updateLastLoginInfo = await models.User.update({ lastLogin: lastTimeLoggedIn }, {
@@ -182,7 +225,6 @@ module.exports = {
             userId: getUser[0].dataValues.userId
           }
         })
-        console.log(updateLastLoginInfo)
         // if (!getUser[0].dataValues.isAdmin) {
         //   res.status(400).json({ error: 'Admin accounts only' });
         // }
@@ -225,7 +267,22 @@ module.exports = {
       }
     })();
   },
-
+  getUserInfo(req, res) {
+    (async () => {
+      try {
+        const { id: userId } = req.user
+        const getUserDetails = await models.User.findOne({
+          where: {
+            userId
+          }
+        })
+        return res.status(200).json({ data: await getUserDetails.dataValues });
+      }
+      catch (error) {
+        res.status(500).json({ error });
+      }
+    })()
+  },
   devcreateAdmin(req, res) {
     const {
       firstName, lastName, email, address1, address2, state, phoneNumber, password,
@@ -293,8 +350,7 @@ module.exports = {
           where: { email: userEmail }
         });
 
-        const sendEmail = await nodeMailer(req, user);
-
+        const sendEmail = await forgotPassword(req, user);
         // console.log(sendEmail, user)
         res.status(200).json({
           sendEmail
