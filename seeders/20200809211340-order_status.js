@@ -5,12 +5,13 @@ const statuses = [
   { status: 'cancel', label: 'Cancel' },
   { status: 'awaiting_payment', label: 'Awaiting Payment' },
   { status: 'payment_completed', label: 'Payment Completed' },
-  { status: 'awaiting_pickup', label: 'Awaiting Pick-up' },
+  { status: 'awaiting_delivery', label: 'Awaiting Delivery/Pick-up' },
+  { status: 'completed', label: 'Completed' },
 ];
 const arr = [];
 let status;
 let id = 1
-for (stat of statuses) {
+for (let stat of statuses) {
   arr.push({ status: stat.status, label: stat.label, orderStatusId: id, createdAt: new Date() });
   id++
 }

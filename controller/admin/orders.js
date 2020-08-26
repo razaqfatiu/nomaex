@@ -1,5 +1,6 @@
 const models = require('../../models/index');
 const { Op } = require('sequelize');
+const { orderComfirmed } = require('../../helper/mail');
 const axios = require('axios').default
 
 module.exports = {
@@ -46,6 +47,7 @@ module.exports = {
               status: 3
             }]
           },
+          include: [],
         });
         return res.status(200).json({ getNewUserOrder: getNewUserOrder[0] });
       } catch (error) {
@@ -54,69 +56,15 @@ module.exports = {
       }
     })()
   },
-  // checkOutInit(req, res) {
-  //   (async () => {
-  //     try {
-  //       const { amount } = req.body
-  //       const { email, id: customerId } = req.user
-  //       const callback_url = `${process.env.frontEndURL}/order`
-  //       const newData = { amount, email, callback_url }
-  //       config = {
-  //         headers: {
-  //           'Authorization': `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
-  //           'Content-Type': 'application/json'
-  //         }
-  //       }
-
-  //       const getUserShoppingCart = await models.shopping_cart.findAll({
-  //         where: {
-  //           [Op.and]: [{
-  //             customerId,
-  //             checkedOut: false
-  //           }]
-  //         },
-  //       });
-
-  //       const { shoppingCartId } = getUserShoppingCart[0].dataValues
-
-  //       newOrder = { shoppingCartId, amount: (parseInt(amount) * 1000), customerId, status: 2 }
-  //       const createNewOrder = await models.order.create(newOrder)
-
-  //       const { orderId } = await createNewOrder.dataValues
-
-  //       const payStackInitializeTransaction = await axios.post('https://api.paystack.co/transaction/initialize', newData, config, { withCredentials: true });
-
-  //       // const transactionResponse = payStackInitializeTransaction.data
-  //       // const authorization_url = await resp.data
-  //       const { authorization_url, access_code, reference } = await payStackInitializeTransaction.data.data
-  //       // const { authorization_url, access_code, reference } = await transactionResponse.data
-
-  //       const newInitPayment = { authorization_url, access_code, reference, orderId }
-  //       console.log(newInitPayment)
-  //       const initializePayment = await models.order_payment_init.create(newInitPayment)
-
-  //       return res.status(201).json({
-  //         initializePayment
-  //       });
-
-  //       // return res.status(201).json({ createNewOrder });
-  //     }
-  //     catch (error) {
-  //       console.log(error)
-  //       return res.status(500).json({
-  //         error
-  //       });
-  //     }
-  //   })()
-  // },
   checkOutPay(req, res) {
     (async () => {
       try {
         const { id: customerId, email } = req.user
+        const { address, state } = req.body
 
         config = {
           headers: {
-            Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+            Authorization: `Bearer ${process.env.PAYSTACK_SECRET_TEST_KEY}`,
             'Content-Type': 'application/json'
           }
         }
@@ -136,6 +84,9 @@ module.exports = {
         const { authorization_url, access_code, reference } = await payStackInitializeTransaction.data.data
 
         const newInitPayment = { authorization_url, access_code, reference, orderId, customerId, createdAt: new Date() }
+
+        const createOrderShippingInfo = await models.shipping_info.create({ orderId, customerId, address: address + state })
+
         const initializePayment = await models.order_payment_init.create(newInitPayment)
 
         const setCheckOut = await models.order.update(
@@ -184,7 +135,7 @@ module.exports = {
         // const { reference } = req.body
         config = {
           headers: {
-            Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+            Authorization: `Bearer ${process.env.PAYSTACK_SECRET_TEST_KEY}`,
             'Content-Type': 'application/json'
           }
         }
@@ -309,6 +260,212 @@ module.exports = {
         res.status(200).json({ data: getUserRecentOrder });
       } catch (error) {
         console.log(error)
+        res.status(500).json({ error });
+      }
+
+    })()
+  },
+  adminGetAllOrders(req, res) {
+    (async () => {
+      try {
+        const { isAdministrator } = req.user;
+        if (!isAdministrator) {
+          return res.status(401).json({
+            error: 'Only Admins can see this',
+          });
+        }
+        // const adminGetAllRecentOrder = await models.shipping_info.findAll({
+        //   where: {
+        //     [Op.and]: [{
+        //       status: 4,
+        //       checkedOut: true
+        //     }],
+        //   },
+        //   order: [['createdAt', 'DESC']],
+        //   include: [
+        //     {
+        //       model: models.order_status,
+        //       attributes: ['label']
+        //     },
+        //     {
+        //       model: models.User,
+        //       attributes: ['firstName', 'email', 'phoneNumber', 'address1', 'address2', 'state',]
+        //     },
+        //     {
+        //       model: models.shipping_info,
+        //       attributes: ['address',]
+        //     },
+        //   ]
+        // });
+        const adminGetAllRecentOrder = await models.order.findAll({
+          where: {
+            [Op.and]: [{
+              status: 4,
+              checkedOut: true
+            }],
+          },
+          order: [['createdAt', 'DESC']],
+          include: [
+            {
+              model: models.order_status,
+              attributes: ['label']
+            },
+            {
+              model: models.User,
+              attributes: ['firstName', 'email', 'phoneNumber', 'address1', 'address2', 'state',]
+            },
+            {
+              model: models.shipping_info,
+              attributes: ['address',]
+            },
+          ]
+        });
+
+        res.status(200).json({ data: adminGetAllRecentOrder });
+      } catch (error) {
+        console.log(error)
+        res.status(500).json({ error });
+      }
+
+    })()
+  },
+  adminOneOrder(req, res) {
+    (async () => {
+      try {
+        const { isAdministrator } = req.user;
+        if (!isAdministrator) {
+          return res.status(401).json({
+            error: 'Only Admins can see this',
+          });
+        }
+        const getCxCredentials = await models.order.findOne(
+          {
+            where: {
+              [Op.and]: [{
+                orderId,
+                checkedOut: true
+              }],
+            },
+            include: [
+              {
+                model: models.order_status,
+                attributes: ['label']
+              },
+              {
+                model: models.User,
+                attributes: ['firstName', 'email', 'phoneNumber', 'address1', 'address2', 'state',]
+              },
+              // {
+              //   model: models.shipping_info,
+              //   attributes: ['address',]
+              // },
+            ]
+          }
+        );
+        res.status(200).json({ data: getCxCredentials });
+      } catch (error) {
+        res.status(500).json({ error });
+      }
+
+    })()
+  },
+  adminOrderShipped(req, res) {
+    (async () => {
+      try {
+        const { isAdministrator } = req.user;
+        if (!isAdministrator) {
+          return res.status(401).json({
+            error: 'Only Admins can see this',
+          });
+        }
+        const { orderId } = req.params
+        const getCxCredentials = await models.order.findOne(
+          {
+            where: {
+              [Op.and]: [{
+                orderId,
+                checkedOut: true
+              }],
+            },
+            include: [
+              {
+                model: models.User,
+                attributes: ['firstName', 'email', 'phoneNumber', 'address1', 'address2', 'state',]
+              },
+              // {
+              //   model: models.shipping_info,
+              //   attributes: ['address',]
+              // },
+            ]
+          }
+        );
+        // console.log(getCxCredentials.dataValues)
+        const userInfo = {}
+
+
+        const { User: user } = await getCxCredentials.dataValues
+        const User = await user.dataValues
+        userInfo.name = User.firstName
+        userInfo.phone = User.phoneNumber
+        userInfo.email = User.email
+        userInfo.order = User.orderId
+        userInfo.address = User.address1 + User.address2 + User.state
+
+        // if (shipping_info.address.length > 1) {
+        //   userInfo.address = User.address1 + User.address2 + User.state
+        // }
+        // else {
+        // }
+
+        await orderComfirmed(userInfo)
+        const updateOrderRequest = await models.order.update(
+          {
+            status: 5,
+            updatedAt: new Date()
+          },
+          {
+            where: {
+              [Op.and]: [{
+                orderId,
+                checkedOut: true
+              }],
+            }
+          }
+        );
+        res.status(200).json({ data: 'Order has been shipped' });
+      } catch (error) {
+        console.log(error)
+        res.status(500).json({ error });
+      }
+
+    })()
+  },
+  adminConfirmDelivery(req, res) {
+    (async () => {
+      try {
+        const { isAdministrator } = req.user;
+        if (!isAdministrator) {
+          return res.status(401).json({
+            error: 'Only Admins can see this',
+          });
+        }
+        const { orderId } = req.params
+        const confirmDelivery = await models.order.update(
+          {
+            status: 6,
+            updatedAt: new Date()
+          },
+          {
+            where: {
+              [Op.and]: [{
+                orderId,
+                checkedOut: true
+              }],
+            },
+          }
+        );
+        res.status(200).json({ data: 'Delivery confirmed' });
+      } catch (error) {
         res.status(500).json({ error });
       }
 

@@ -67,6 +67,8 @@ module.exports = (sequelize, DataTypes) => {
     // models.order.belongsTo(models.Product, { foreignKey: 'productId' });
     models.order.belongsTo(models.User, { foreignKey: 'customerId' });
     models.order.belongsTo(models.order_status, { foreignKey: 'status' });
+    models.order.hasOne(models.shipping_info, { foreignKey: 'shippingInfoId' });
+    
     models.order.belongsTo(models.shopping_cart, { foreignKey: 'shoppingCartId' });
     models.order.hasOne(models.order_payment_init, { foreignKey: 'orderId' });
     models.order.hasOne(models.verify_order_payment, { foreignKey: 'verifyOrderPaymentId' });

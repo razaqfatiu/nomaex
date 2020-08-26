@@ -45,5 +45,25 @@ module.exports = {
         return error
       }
     })()
+  },
+  orderComfirmed(userInfo) {
+    (async () => {
+      try {
+        emailConfig = {
+          from: process.env.NOMAEX_EMAIL,
+          to: userInfo.email,
+          subject: 'O Activation',
+          text: `Dear ${userInfo.name}, \n\n
+          Thank you for shopping with NOMAEX.\n
+          We have just dispatched the item(s) below from your order ${userInfo.order} in package DS-023-362654157-8338.
+          The package will be delivered by our delivery agent once its get to the delivery hub at the following address: ${userInfo.address}.
+          You will receive an SMS on ${userInfo.phone} when the package is out for delivery with details of our delivery associate.
+        `};
+        sendEmail = await transporter.sendMail(emailConfig)
+        return sendEmail
+      } catch (error) {
+        return error
+      }
+    })()
   }
 } 
