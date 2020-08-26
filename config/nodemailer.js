@@ -6,9 +6,8 @@ const nodemailer = require('nodemailer');
 //     console.log('test NM')
 const transporter = nodemailer.createTransport({
   host: 'mail.privateemail.com',
-  port: 587,
-  // 465,
-  secure: false,
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.NOMAEX_EMAIL,
     pass: process.env.NOMAEX_EMAIL_PASSWORD // naturally, replace both with your real credentials or an application-specific password
