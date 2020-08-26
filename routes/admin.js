@@ -26,7 +26,7 @@ const {
 const { listAllCategories } = require('../controller/admin/get-categories');
 const multer = require('../middleware/multer');
 const { addItemsToCart, getItemsInUserCart, removeItemFromCart } = require('../controller/admin/cart');
-const { createOrder, getInitializedOrder, checkOutPay, verifyCheckOut, getRecentOrders, cancelOrder } = require('../controller/admin/orders');
+const { createOrder, getInitializedOrder, checkOutPay, verifyCheckOut, getRecentOrders, cancelOrder, adminGetAllOrders, adminOneOrder, adminOrderShipped, adminConfirmDelivery } = require('../controller/admin/orders');
 
 const adminRouter = express.Router();
 
@@ -67,5 +67,11 @@ adminRouter.delete('/order/cancel', auth, cancelOrder)
 adminRouter.get('/orders/recent', auth, getRecentOrders)
 
 // adminRouter.post('/cart/checkout', auth, checkOutInit)
+adminRouter.get('/admin/orders', auth, adminGetAllOrders)
+adminRouter.get('/admin/orders/:orderId', auth, adminOneOrder)
+adminRouter.get('/admin/shipped/orders/:orderId', auth, adminOrderShipped)
+adminRouter.patch('/admin/delivered/orders/:orderId', auth, adminConfirmDelivery)
+
+
 
 module.exports = adminRouter;

@@ -90,6 +90,9 @@ module.exports = (sequelize, DataTypes) => {
     models.User.hasMany(models.order, {
       foreignKey: 'orderId'
     });
+    models.User.hasOne(models.shipping_info, {
+      foreignKey: 'shippingInfoId'
+    });
   };
   return User
 }
