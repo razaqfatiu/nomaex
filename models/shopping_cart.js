@@ -24,10 +24,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   shopping_cart.associate = function (models) {
     // associations can be defined here
-    models.User.hasMany(models.Cart, {
+    models.shopping_cart.hasMany(models.Cart, {
       foreignKey: 'shoppingCart'
     });
-    models.User.hasOne(models.order, {
+    models.shopping_cart.hasOne(models.order, {
       foreignKey: 'shoppingCartId'
     });
   };

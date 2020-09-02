@@ -178,7 +178,6 @@ module.exports = {
       try {
         const now = new Date().getTime / 1000
         const { token } = await req.cookies
-        // return  res.json({ token });
         if (typeof token !== 'string') {
           return res.sendStatus(401).json({ error: 'Invalid token' });
         }
@@ -247,7 +246,7 @@ module.exports = {
         res.cookie('token', signToken, {
           maxAge: oneDayCookie, // 24 hour
           httpOnly: true,
-          // sameSite: true,
+          sameSite: true,
           secure: process.env.NODE_ENV === 'production' ? true : false,
           domain: process.env.domain
         })
@@ -262,7 +261,6 @@ module.exports = {
 
 
       } catch (error) {
-        console.log(error)
         return res.status(500).json({ error });
       }
     })();
@@ -296,7 +294,6 @@ module.exports = {
           return res.status(400).json({ error: 'User account exists' });
         }
         const hash = await bcrypt.hash(password, 10);
-        console.log(req.body);
         const newUser = {
           firstName,
           lastName,
@@ -314,7 +311,6 @@ module.exports = {
           message: 'Admin Account successfully created',
         });
       } catch (err) {
-        console.log(`ERRORI ${err}`);
         return res.status(500).json({ errorResponse: err.message });
       }
     })();
@@ -352,12 +348,12 @@ module.exports = {
 
         const sendEmail = await forgotPassword(req, user);
         // console.log(sendEmail, user)
-        res.status(200).json({
+        return res.status(200).json({
           sendEmail
         })
       }
       catch (error) {
-        console.log(error)
+        return res.status(500).json({ error });
       }
     })()
   },
@@ -395,10 +391,10 @@ module.exports = {
           }
         });
 
-        res.status(201).json({ result: resetPassword })
+        return res.status(201).json({ result: resetPassword })
       }
       catch (error) {
-        console.log(error)
+        return res.status(500).json({ error });
       }
     })()
   },
@@ -409,7 +405,6 @@ module.exports = {
           message: 'Sign out success!!!'
         });
       } catch (error) {
-        console.log(error)
         return res.status(500).json({ error });
       }
     })()
