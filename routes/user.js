@@ -9,7 +9,7 @@ userRouter.get('/', (req, res) => {
 })
 userRouter.get('/test', async (req, res) => {
     try {
-      const userInfo = { name: 'fatiu', email: 'razaqfatiu@gmail.com', token: 'dca4bfb708cc287a548ab4561ec9aa80f553ffb7' }
+      const userInfo = { name: 'fatiu', email: 'support@nomaex.com', token: 'dca4bfb708cc287a548ab4561ec9aa80f553ffb7' }
       emailConfig = {
         from: process.env.NOMAEX_EMAIL,
         to: userInfo.email,
@@ -25,7 +25,8 @@ userRouter.get('/test', async (req, res) => {
       await transporter.sendMail(emailConfig)
       return res.status(200).json({ message: 'sent' });
     } catch (error) {
-      return error
+      console.log(error)
+      return  res.status(500).json({error});
     }
 
 })

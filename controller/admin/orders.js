@@ -274,29 +274,6 @@ module.exports = {
             error: 'Only Admins can see this',
           });
         }
-        // const adminGetAllRecentOrder = await models.shipping_info.findAll({
-        //   where: {
-        //     [Op.and]: [{
-        //       status: 4,
-        //       checkedOut: true
-        //     }],
-        //   },
-        //   order: [['createdAt', 'DESC']],
-        //   include: [
-        //     {
-        //       model: models.order_status,
-        //       attributes: ['label']
-        //     },
-        //     {
-        //       model: models.User,
-        //       attributes: ['firstName', 'email', 'phoneNumber', 'address1', 'address2', 'state',]
-        //     },
-        //     {
-        //       model: models.shipping_info,
-        //       attributes: ['address',]
-        //     },
-        //   ]
-        // });
         const adminGetAllRecentOrder = await models.order.findAll({
           where: {
             [Op.and]: [{
@@ -338,6 +315,7 @@ module.exports = {
             error: 'Only Admins can see this',
           });
         }
+        const { orderId } = req.params
         const getCxCredentials = await models.order.findOne(
           {
             where: {
@@ -355,15 +333,21 @@ module.exports = {
                 model: models.User,
                 attributes: ['firstName', 'email', 'phoneNumber', 'address1', 'address2', 'state',]
               },
-              // {
-              //   model: models.shipping_info,
-              //   attributes: ['address',]
-              // },
+              {
+                model: models.shopping_cart,
+                include: [{
+                  model: models.Cart,
+                  include: {
+                    model: models.Product
+                  }
+                }]
+              }
             ]
           }
         );
         res.status(200).json({ data: getCxCredentials });
       } catch (error) {
+        console.log(error)
         res.status(500).json({ error });
       }
 
@@ -392,10 +376,6 @@ module.exports = {
                 model: models.User,
                 attributes: ['firstName', 'email', 'phoneNumber', 'address1', 'address2', 'state',]
               },
-              // {
-              //   model: models.shipping_info,
-              //   attributes: ['address',]
-              // },
             ]
           }
         );
