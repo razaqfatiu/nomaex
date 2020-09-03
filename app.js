@@ -16,6 +16,7 @@ const port = process.env.PORT || '5000';
 const db = require('./models/index');
 const { sequelize } = db;
 
+
 (async function () {
   try {
     await sequelize.authenticate();
@@ -37,13 +38,22 @@ app.use(bodyParser.json());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// app.use(cors());
-app.use(cors({ credentials: true, origin: '*' }));
+app.use(cors());
+// app.use(cors({ credentials: true, origin: '*' }));
 // app.use(cors({ credentials: true, origin: process.env.frontEndURL }));
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  // res.header('Access-Control-Allow-Origin', process.env.frontEndURL);
+
+  // const host = req.get('host');
+  // const whitelist = [process.env.frontEndURL, 'https://nomaexapi.herokuapp.com/']
+
+  // whitelist.forEach(function(val, key){
+  //   if (host.indexOf(val) > -1){
+  //     res.setHeader('Access-Control-Allow-Origin', host);
+  //   }
+  // })
+    // res.header('Access-Control-Allow-Origin', origin);
+  res.header('Access-Control-Allow-Origin', process.env.frontEndURL || 'https://nomaexapi.herokuapp.com/');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, OPTIONS, DELETE');
@@ -58,7 +68,7 @@ app.use('/api/v1/user', userRouter);
 app.use('/api/v1', adminRouter);
 app.use('/', (req, res) => res.send('Welcome to Nomaex API'));
 
-app.get('*', function(req, res){
+app.get('*', function (req, res) {
   res.status(404).send('NotFound');
 });
 // catch 404 and forward to error handler
