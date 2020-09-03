@@ -35,7 +35,7 @@ adminRouter.post('/dev-create-admin', devcreateAdmin);
 adminRouter.post('/create-admin', auth, signUpValidator, createAdmin);
 adminRouter.post('/signin', signIn);
 adminRouter.post('/signup', signUp);
-adminRouter.get('/auth', authenticate)
+adminRouter.get('/auth', auth, authenticate)
 adminRouter.get('/sign-out', signOut)
 adminRouter.patch('/account/activation', verifyAccount)
 adminRouter.post('/auth/forgot-password', forgotPassword)

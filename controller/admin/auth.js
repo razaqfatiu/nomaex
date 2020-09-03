@@ -216,9 +216,8 @@ module.exports = {
           });
         }
         const accountActivation = await getUser[0].dataValues
-        if (accountActivation.isActive == false) return res.status(400).json({ message: 'Please refer to the previous email sent to activate your account and retry!' });
+        // if (accountActivation.isActive == false) return res.status(400).json({ message: 'Please refer to the previous email sent to activate your account and retry!' });
         const lastTimeLoggedIn = new Date()
-        // const lastTimeLoggedIn = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
         const updateLastLoginInfo = await models.User.update({ lastLogin: lastTimeLoggedIn }, {
           where: {
             userId: getUser[0].dataValues.userId
