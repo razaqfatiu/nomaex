@@ -245,7 +245,7 @@ module.exports = {
         res.cookie('token', signToken, {
           maxAge: oneDayCookie, // 24 hour
           httpOnly: true,
-          sameSite: false,
+          // sameSite: false,
           secure: process.env.NODE_ENV === 'production' ? true : false,
           domain: process.env.domain
         })
