@@ -246,6 +246,7 @@ module.exports = {
           maxAge: oneDayCookie, // 24 hour
           httpOnly: true,
           // sameSite: false,
+          // secure: true,
           secure: process.env.NODE_ENV === 'production' ? true : false,
           domain: process.env.domain
         })
@@ -257,7 +258,6 @@ module.exports = {
         // const decodedToken = await jwt.verify(tokens, process.env.TOKEN_SECRET);
         // return res.status(200).json({ response: decodedToken });
         return res.status(200).json({ message: 'Sign in successful!' });
-
 
       } catch (error) {
         return res.status(500).json({ error });
