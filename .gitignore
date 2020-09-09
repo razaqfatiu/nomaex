@@ -1,3 +1,6 @@
 /node_modules
 .env
+# exclude everything
 /media/**/*.*
+# exception to the rule
+!/media/**/.gitkeep 
