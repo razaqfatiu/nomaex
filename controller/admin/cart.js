@@ -53,7 +53,6 @@ module.exports = {
         return res.status(200).json({ message: 'Added item to cart' });
       }
       catch (error) {
-        console.log(error)
         return res.status(500).json({ errorResponse: error });
       }
     })()
@@ -62,13 +61,11 @@ module.exports = {
     (async () => {
       try {
         const { cartId } = req.params
-        console.log(cartId)
         const removeItem = await models.Cart.destroy({
           where: { cartId }
         })
         return res.status(200).json({ message: 'Removed item successfully' });
       } catch (error) {
-        console.log(error)
         return res.status(500).json({ error });
       }
     })()
@@ -100,7 +97,6 @@ module.exports = {
           getUserCart
         });
       } catch (error) {
-        console.log(error)
         return res.status(500).json({ error });
       }
     })()

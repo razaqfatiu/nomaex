@@ -1,57 +1,70 @@
-require('dotenv').config();
+require("dotenv").config();
 // const debug = require('debug')('app');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { check, validationResult } = require('express-validator');
-const { Op, where } = require('sequelize');
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const { check, validationResult } = require("express-validator");
+const { Op, where } = require("sequelize");
 
-const models = require('../../models/index');
-const crypto = require('crypto');
+const models = require("../../models/index");
+const crypto = require("crypto");
 // const nodeMailer = require('../../config/nodemailer');
-const { signAccessToken } = require('../../helper/jwt-helper');
-const { forgotPassword, activateAccount } = require('../../helper/mail');
-
+const { signAccessToken } = require("../../helper/jwt-helper");
+const {
+  forgotPassword,
+  activateAccount,
+  templates,
+} = require("../../helper/mail");
+const { parseEmailContent, client } = require("../../config/nodemailer");
 
 module.exports = {
   signUpValidator: [
-    check('firstName').not().isEmpty().trim(),
-    check('lastName').not().isEmpty().trim(),
-    check('email').isEmail().not().isEmpty()
-      .trim(),
-    check('password').isLength({ min: 5 }).not().isEmpty()
+    check("firstName").not().isEmpty().trim(),
+    check("lastName").not().isEmpty().trim(),
+    check("email").isEmail().not().isEmpty().trim(),
+    check("password")
+      .isLength({ min: 5 })
+      .not()
+      .isEmpty()
       .trim()
-      .withMessage('must be at least 5 chars long'),
-    check('address1').isLength({ min: 4 }).not().isEmpty()
-      .trim(),
-    check('address2').not().isEmpty().trim(),
-    check('state').not().isEmpty().trim(),
-    check('phoneNumber').not().isEmpty().trim(),
+      .withMessage("must be at least 5 chars long"),
+    check("address1").isLength({ min: 4 }).not().isEmpty().trim(),
+    check("address2").not().isEmpty().trim(),
+    check("state").not().isEmpty().trim(),
+    check("phoneNumber").not().isEmpty().trim(),
   ],
 
   createAdmin(req, res) {
     (async () => {
       try {
         const {
-          firstName, lastName, email, address1, address2, state, phoneNumber, password,
+          firstName,
+          lastName,
+          address1,
+          address2,
+          state,
+          phoneNumber,
+          password,
         } = req.body;
         const isAdmin = true;
+
+        let { email } = req.body;
+        email = email.toLowerCase();
 
         const userId = req.user.id;
         const { token, isAdministrator } = req.user;
         const checkIfNewuserExists = await models.User.findAll({
           where: {
-            [Op.and]: [
-              { email },
-              { deletedAt: null },
-            ],
+            [Op.and]: [{ email }, { deletedAt: null }],
           },
         });
         if (checkIfNewuserExists.length > 0) {
-          return res.status(400).json({ error: 'User account exists, Consider resetting your password' });
+          return res.status(400).json({
+            error: "User account exists, Consider resetting your password",
+          });
         }
         if (!isAdministrator) {
           return res.status(401).json({
-            error: 'Only Admins can create accounts',
+            error: "Only Admins can create accounts",
           });
         }
         const hash = await bcrypt.hash(password, 10);
@@ -74,7 +87,7 @@ module.exports = {
         await models.User.sync();
         await models.User.create(newUser);
         return res.status(201).json({
-          message: 'Admin Account successfully created',
+          message: "Admin Account successfully created",
           userId,
         });
       } catch (err) {
@@ -83,31 +96,39 @@ module.exports = {
     })();
   },
   signUp(req, res) {
-
     (async () => {
       try {
         const {
-          firstName, lastName, email, address1, address2, state, phoneNumber, password,
+          firstName,
+          lastName,
+          address1,
+          address2,
+          state,
+          phoneNumber,
+          password,
         } = req.body;
+
+        let { email } = req.body;
+        email = email.toLowerCase();
         const isAdmin = false;
-        const lastLogin = createdAt = new Date()
+        const lastLogin = (createdAt = new Date());
         const checkIfNewuserExists = await models.User.findAll({
           where: {
-            [Op.and]: [
-              { email },
-              { isDeleted: false },
-            ],
+            [Op.and]: [{ email }, { isDeleted: false }],
           },
         });
         if (checkIfNewuserExists.length > 0) {
-          return res.status(400).json({ error: 'User account exists, Consider resetting your password' });
+          return res.status(400).json({
+            error: "User account exists, Consider resetting your password",
+          });
         }
 
         const hash = await bcrypt.hash(password, 10);
-        const genToken = await crypto.randomBytes(20)
+        const genToken = await crypto.randomBytes(20);
         const user = {};
-        user.name = firstName; user.email = email
-        const token = user.token = genToken.toString('hex');
+        user.name = firstName;
+        user.email = email;
+        const token = (user.token = genToken.toString("hex"));
         const newUser = {
           firstName,
           lastName,
@@ -121,7 +142,7 @@ module.exports = {
           isAdmin,
           lastLogin,
           resetPasswordToken: token,
-          createdAt
+          createdAt,
         };
         // VALIDATION
         const errors = validationResult(req);
@@ -129,13 +150,19 @@ module.exports = {
           return res.status(422).json({ errors: errors.array() });
         }
         await models.User.create(newUser);
-        await activateAccount(req, user);
+        // parseEmailContent(
+        //   req,
+        //   user,
+        //   templates.accountActivation.subject,
+        //   templates.accountActivation.body(req, user)
+        // );
+
+        activateAccount(req, user);
 
         return res.status(201).json({
-          message: 'Account successfully created',
+          message: "Account successfully created",
         });
       } catch (err) {
-        console.log(err)
         return res.status(500).json({ errorResponse: err });
       }
     })();
@@ -143,86 +170,98 @@ module.exports = {
   verifyAccount(req, res) {
     (async () => {
       try {
-        const { token } = req.body
-        console.log(token)
+        const { token } = req.body;
         const verAccount = await models.User.findAll({
           where: {
             resetPasswordToken: token,
-          }
-        })
-        if (verAccount.length < 1) {
-          return res.status(401).json({ error: 'Account was previously verified or Activation token is invalid or has expired.' });
-        }
-        const checkifVerifiedBefore = await verAccount[0].dataValues
-        if (checkifVerifiedBefore.resetPasswordToken === '') res.status(400).json({ message: 'Account was verified' });
-        await models.User.update({
-          resetPasswordToken: '',
-          isActive: true,
-          updatedAt: new Date()
-        }, {
-          returning: true,
-          where: {
-            resetPasswordToken: token,
-          }
+          },
         });
-        return res.status(200).json({ message: 'Account Activated Successfully' })
-      }
-      catch (error) {
-        console.log(error)
+        if (verAccount.length < 1) {
+          return res.status(401).json({
+            error:
+              "Account was previously verified or Activation token is invalid or has expired.",
+          });
+        }
+        const checkifVerifiedBefore = await verAccount[0].dataValues;
+        if (checkifVerifiedBefore.resetPasswordToken === "")
+          res.status(400).json({ message: "Account was verified" });
+        await models.User.update(
+          {
+            resetPasswordToken: "",
+            isActive: true,
+            updatedAt: new Date(),
+          },
+          {
+            returning: true,
+            where: {
+              resetPasswordToken: token,
+            },
+          }
+        );
+        return res
+          .status(200)
+          .json({ message: "Account Activated Successfully" });
+      } catch (error) {
         res.status(500).json({ error });
       }
-    })()
+    })();
   },
   authenticate(req, res) {
     (async () => {
       try {
-        const now = new Date().getTime / 1000
-        const { token } = await req.cookies
-        if (typeof token !== 'string') {
-          return res.sendStatus(401).json({ error: 'Invalid token' });
+        const now = new Date().getTime / 1000;
+        const { token } = await req.cookies;
+        if (typeof token !== "string") {
+          return res.sendStatus(401).json({ error: "Invalid token" });
         }
-        const userCred = await jwt.verify(token, process.env.TOKEN_SECRET)
+        const userCred = await jwt.verify(token, process.env.TOKEN_SECRET);
         return res.status(200).json({ userCred });
-      }
-      catch (error) {
-        console.log(error)
-        if (error.message === 'jwt expired') res.status(400).json({ value: 'please sign in' });
+      } catch (error) {
+        if (error.message === "jwt expired")
+          res.status(400).json({ value: "please sign in" });
         res.status(500).json({ error });
       }
-    })()
+    })();
   },
   signIn(req, res) {
-    const { email, password } = req.body;
-
+    let { email, password } = req.body;
+    email = email.toLowerCase();
     (async () => {
       try {
         const getUser = await models.User.findAll({
           where: {
-            [Op.and]: [
-              { email },
-              { deletedAt: null },
-            ],
+            [Op.and]: [{ email }, { deletedAt: null }],
           },
         });
         if (getUser.length === 0) {
           return res.status(401).json({
-            error: 'User not found',
+            error: "User not found",
           });
         }
-        const compareHash = await bcrypt.compare(password, getUser[0].dataValues.password);
+        const compareHash = await bcrypt.compare(
+          password,
+          getUser[0].dataValues.password
+        );
         if (!compareHash) {
           return res.status(401).json({
-            error: 'Incorrect email or password',
+            error: "Incorrect email or password",
           });
         }
-        const accountActivation = await getUser[0].dataValues
-        // if (accountActivation.isActive == false) return res.status(400).json({ message: 'Please refer to the previous email sent to activate your account and retry!' });
-        const lastTimeLoggedIn = new Date()
-        const updateLastLoginInfo = await models.User.update({ lastLogin: lastTimeLoggedIn }, {
-          where: {
-            userId: getUser[0].dataValues.userId
+        const accountActivation = await getUser[0].dataValues;
+        if (accountActivation.isActive == false)
+          return res.status(400).json({
+            message:
+              "Please refer to the previous email sent to activate your account and retry!",
+          });
+        const lastTimeLoggedIn = new Date();
+        const updateLastLoginInfo = await models.User.update(
+          { lastLogin: lastTimeLoggedIn },
+          {
+            where: {
+              userId: getUser[0].dataValues.userId,
+            },
           }
-        })
+        );
         // if (!getUser[0].dataValues.isAdmin) {
         //   res.status(400).json({ error: 'Admin accounts only' });
         // }
@@ -230,25 +269,24 @@ module.exports = {
           userId: getUser[0].dataValues.userId,
           email: getUser[0].dataValues.email,
           isAdministrator: getUser[0].dataValues.isAdmin,
-        }
+        };
 
-
-        const oneDayCookie = 1000 * 60 * 60 * 24
+        const oneDayCookie = 1000 * 60 * 60 * 24;
         // const oneDayCookie = 60 * 60 * 1000 * 24
-        const signToken = await signAccessToken(userPayload)
+        const signToken = await signAccessToken(userPayload);
         //   const token = await jwt.sign(
         //     ,
         //     process.env.TOKEN_SECRET,
         // { expiresIn: '24' },
         //   );
 
-        res.cookie('token', signToken, {
+        res.cookie("token", signToken, {
           maxAge: oneDayCookie, // 24 hour
           httpOnly: true,
-          sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-          secure: process.env.NODE_ENV === 'production' ? true : false,
-          domain: process.env.domain
-        })
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+          secure: process.env.NODE_ENV === "production" ? true : false,
+          domain: process.env.domain,
+        });
 
         // const tokens = await req.cookies.token;
         // if (!tokens) {
@@ -256,41 +294,48 @@ module.exports = {
         // }
         // const decodedToken = await jwt.verify(tokens, process.env.TOKEN_SECRET);
         // return res.status(200).json({ response: decodedToken });
-        return res.status(200).json({ message: 'Sign in successful!' });
-
+        return res.status(200).json({ message: "Sign in successful!" });
       } catch (error) {
-        console.log(error)
-        return res.status(500).json({ error });
+        return res.status(500).json({ error: error });
       }
     })();
   },
   getUserInfo(req, res) {
     (async () => {
       try {
-        const { id: userId } = req.user
+        const { id: userId } = req.user;
         const getUserDetails = await models.User.findOne({
           where: {
-            userId
-          }
-        })
+            userId,
+          },
+        });
         return res.status(200).json({ data: await getUserDetails.dataValues });
-      }
-      catch (error) {
+      } catch (error) {
         res.status(500).json({ error });
       }
-    })()
+    })();
   },
   devcreateAdmin(req, res) {
     const {
-      firstName, lastName, email, address1, address2, state, phoneNumber, password,
+      firstName,
+      lastName,
+      address1,
+      address2,
+      state,
+      phoneNumber,
+      password,
     } = req.body;
+    let { email } = req.body;
+    email = email.toLowerCase();
     const isAdmin = true;
 
     (async () => {
       try {
-        const checkIfNewuserExists = await models.User.findAll({ where: { email } });
+        const checkIfNewuserExists = await models.User.findAll({
+          where: { email },
+        });
         if (checkIfNewuserExists.length > 0) {
-          return res.status(400).json({ error: 'User account exists' });
+          return res.status(400).json({ error: "User account exists" });
         }
         const hash = await bcrypt.hash(password, 10);
         const newUser = {
@@ -307,7 +352,7 @@ module.exports = {
         await models.User.sync();
         await models.User.create(newUser);
         return res.status(201).json({
-          message: 'Admin Account successfully created',
+          message: "Admin Account successfully created",
         });
       } catch (err) {
         return res.status(500).json({ errorResponse: err.message });
@@ -316,96 +361,119 @@ module.exports = {
   },
   forgotPassword(req, res) {
     (async () => {
-
       try {
-        const { email } = req.body
+        let { email } = req.body;
+        email = email.toLowerCase();
+
         const checkIfUserExists = await models.User.findAll({
           where: {
-            [Op.and]: [
-              { email },
-              { deletedAt: null },
-            ],
+            [Op.and]: [{ email }, { deletedAt: null }],
           },
         });
         if (checkIfUserExists.length < 1) {
-          return res.status(401).json({ error: 'Account not found, Create an account' });
+          return res
+            .status(401)
+            .json({ error: "Account not found, Create an account" });
         }
         const userDetails = checkIfUserExists[0].dataValues;
-        const { firstName, email: userEmail } = userDetails
+        const { firstName, email: userEmail } = userDetails;
         const user = {};
-        user.name = firstName; user.email = userEmail
-        const genToken = await crypto.randomBytes(20)
-        const token = user.token = genToken.toString('hex');
+        user.name = firstName;
+        user.email = userEmail;
+        const genToken = await crypto.randomBytes(20);
+        const token = (user.token = genToken.toString("hex"));
 
-        const updateUserWithToken = await models.User.update({
-          resetPasswordToken: token,
-          resetPasswordExpires: Date.now() + 600000
-        }, {
-          returning: true,
-          where: { email: userEmail }
-        });
+        const updateUserWithToken = await models.User.update(
+          {
+            resetPasswordToken: token,
+            resetPasswordExpires: Date.now() + 600000,
+          },
+          {
+            returning: true,
+            where: { email: userEmail },
+          }
+        );
 
+        // const sendEmail = await client.sendEmail({
+        //   to: user.email,
+        //   from: process.env.NOMAEX_EMAIL,
+        //   subject: templates.forgotPassword.subject,
+        //   message: templates.forgotPassword.body(req, user)
+        // })
+        // const sendEmail = await parseEmailContent(
+        //   req,
+        //   user,
+        //   templates.forgotPassword.subject,
+        //   templates.forgotPassword.body(req, user)
+        // );
         const sendEmail = await forgotPassword(req, user);
-        // console.log(sendEmail, user)
+        console.log(sendEmail)
+
         return res.status(200).json({
-          sendEmail
-        })
-      }
-      catch (error) {
+          message: "email sent",
+        });
+      } catch (error) {
+        console.log(error);
         return res.status(500).json({ error });
       }
-    })()
+    })();
   },
   passwordReset(req, res) {
     (async () => {
       try {
-        const { token } = req.body
+        const { token } = req.body;
         const resetPassword = await models.User.findAll({
           where: {
             resetPasswordToken: token,
             resetPasswordExpires: {
-              [Op.gt]: Date.now()
-            }
-          }
-        })
+              [Op.gt]: Date.now(),
+            },
+          },
+        });
         if (resetPassword.length < 1) {
-          return res.status(401).json({ error: 'Password reset token is invalid or has expired.' });
+          return res
+            .status(401)
+            .json({ error: "Password reset token is invalid or has expired." });
         }
         if (!(req.body.newPassword === req.body.verifyPassword)) {
-          return res.status(400).json({ response: 'The new password must match.' })
+          return res
+            .status(400)
+            .json({ response: "The new password must match." });
         }
         const hash = await bcrypt.hash(req.body.newPassword, 10);
 
-        const updateUserWithNewPassword = await models.User.update({
-          password: hash,
-          resetPasswordToken: null,
-          resetPasswordExpires: Date.now() + 600000
-        }, {
-          returning: true,
-          where: {
-            resetPasswordToken: token,
-            resetPasswordExpires: {
-              [Op.gt]: Date.now()
-            }
+        const updateUserWithNewPassword = await models.User.update(
+          {
+            password: hash,
+            resetPasswordToken: null,
+            resetPasswordExpires: Date.now() + 600000,
+          },
+          {
+            returning: true,
+            where: {
+              resetPasswordToken: token,
+              resetPasswordExpires: {
+                [Op.gt]: Date.now(),
+              },
+            },
           }
-        });
+        );
 
-        return res.status(201).json({ result: resetPassword })
-      }
-      catch (error) {
+        return res.status(201).json({ result: resetPassword });
+      } catch (error) {
         return res.status(500).json({ error });
       }
-    })()
+    })();
   },
   signOut(req, res) {
     (async () => {
       try {
-        return res.clearCookie('token', { path: '/' }).status(200).json({
-          message: 'Sign out success!!!'
+        return res.clearCookie("token", { path: "/" }).status(200).json({
+          message: "Sign out success!!!",
         });
       } catch (error) {
         return res.status(500).json({ error });
       }
-    })()
-  }
-}
+    })();
+  },
+};

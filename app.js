@@ -7,20 +7,21 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const debug = require('debug')('app');
+const cors = require('cors');
 const userRouter = require('./routes/user');
 const adminRouter = require('./routes/admin');
-const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || '5000';
 const db = require('./models/index');
+
 const { sequelize } = db;
 
 
 (async function () {
   try {
     await sequelize.authenticate();
-    debug(`connected to Db on 5432......`);
+    debug('connected to Db on 5432......');
   } catch (err) {
     debug(`db error: ${err}`);
   }
@@ -42,7 +43,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors({ credentials: true, origin: process.env.frontEndURL }));
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', process.env.frontEndURL );
+  res.header('Access-Control-Allow-Origin', process.env.frontEndURL);
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, OPTIONS, DELETE');
@@ -57,7 +58,7 @@ app.use('/api/v1/user', userRouter);
 app.use('/api/v1', adminRouter);
 app.use('/', (req, res) => res.send('Welcome to Nomaex API'));
 
-app.get('*', function (req, res) {
+app.get('*', (req, res) => {
   res.status(404).send('NotFound');
 });
 // catch 404 and forward to error handler

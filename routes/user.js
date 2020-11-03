@@ -25,7 +25,6 @@ userRouter.get('/test', async (req, res) => {
       await transporter.sendMail(emailConfig)
       return res.status(200).json({ message: 'sent' });
     } catch (error) {
-      console.log(error)
       return  res.status(500).json({error});
     }
 

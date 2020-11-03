@@ -51,7 +51,6 @@ module.exports = {
         });
         return res.status(200).json({ getNewUserOrder: getNewUserOrder[0] });
       } catch (error) {
-        console.log(error)
         return res.status(500).json({ error });
       }
     })()
@@ -81,6 +80,10 @@ module.exports = {
         const newData = { amount: (parseInt(amount) * 100), email, callback_url }
         const payStackInitializeTransaction = await axios.post('https://api.paystack.co/transaction/initialize', newData, config, { withCredentials: true });
 
+        // if(payStackInitializeTransaction.data === null || payStackInitializeTransaction.dat === undefined) {
+        //   return res.status.json({ message: 'Paystack initialization failed' })
+        // }
+        
         const { authorization_url, access_code, reference } = await payStackInitializeTransaction.data.data
 
         const newInitPayment = { authorization_url, access_code, reference, orderId, customerId, createdAt: new Date() }
@@ -121,7 +124,6 @@ module.exports = {
 
       }
       catch (error) {
-        console.log(error)
         return res.status(500).json({
           error
         });
@@ -164,11 +166,11 @@ module.exports = {
         if (checkIfPaymentExists.length > 0) return res.status(200).json({ data: 'Payment Was verified' });
 
         const payStackVerifyTransaction = await axios.get(`https://api.paystack.co/transaction/verify/${reference}`, config, { withCredentials: true });
+        console.log(payStackVerifyTransaction.status)
+        if(payStackVerifyTransaction.status !== 200) return res.status(400).json({ message: 'Verification failed or payment not completed'});
 
         const { amount, currency, transaction_date, status, reference: ref, domain, metadata, gateway_response, message, channel, ip_address, log, fees, authorization, customer, plan, requested_amount } = await payStackVerifyTransaction.data.data
         // const { time_spent, attempts, authentication, errors, success, mobile, input, channel, history, } = await payStackVerifyTransaction.data.data.log
-
-
 
         const capturePaymentVerifyResponse = await models.verify_order_payment.create({
           orderId, amount, currency, transaction_date, status, reference: ref, domain, metadata, orderPaymentInitId, gateway_response, message, channel, ip_address, createdAt: new Date(),
@@ -184,7 +186,6 @@ module.exports = {
         });
       }
       catch (error) {
-        console.log(error)
         return res.status(500).json({
           error
         });
@@ -259,7 +260,6 @@ module.exports = {
         });
         res.status(200).json({ data: getUserRecentOrder });
       } catch (error) {
-        console.log(error)
         res.status(500).json({ error });
       }
 
@@ -289,7 +289,7 @@ module.exports = {
             },
             {
               model: models.User,
-              attributes: ['firstName', 'email', 'phoneNumber', 'address1', 'address2', 'state',]
+              attributes: ['firstName', 'lastName', 'email', 'phoneNumber', 'address1', 'address2', 'state',]
             },
             {
               model: models.shipping_info,
@@ -300,7 +300,6 @@ module.exports = {
 
         res.status(200).json({ data: adminGetAllRecentOrder });
       } catch (error) {
-        console.log(error)
         res.status(500).json({ error });
       }
 
@@ -331,7 +330,7 @@ module.exports = {
               },
               {
                 model: models.User,
-                attributes: ['firstName', 'email', 'phoneNumber', 'address1', 'address2', 'state',]
+                attributes: ['firstName', 'lastName', 'email', 'phoneNumber', 'address1', 'address2', 'state',]
               },
               {
                 model: models.shopping_cart,
@@ -345,9 +344,8 @@ module.exports = {
             ]
           }
         );
-        res.status(200).json({ data: getCxCredentials });
+        res.status(200).json({ data: getCxCredentials, shoppingCart: getCxCredentials.shopping_cart });
       } catch (error) {
-        console.log(error)
         res.status(500).json({ error });
       }
 
@@ -397,7 +395,6 @@ module.exports = {
         // else {
         // }
 
-        await orderComfirmed(userInfo)
         const updateOrderRequest = await models.order.update(
           {
             status: 5,
@@ -412,9 +409,11 @@ module.exports = {
             }
           }
         );
+
+                await orderComfirmed(userInfo)
+
         res.status(200).json({ data: 'Order has been shipped' });
       } catch (error) {
-        console.log(error)
         res.status(500).json({ error });
       }
 

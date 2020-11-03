@@ -90,7 +90,6 @@ module.exports = {
 
       }
       catch (error) {
-        console.log(error)
         return res.status(500).json({ error });
       }
     })()
@@ -138,7 +137,6 @@ module.exports = {
         return res.status(200).json({ getProductsByCategory });
       }
       catch (error) {
-        console.log(error)
         return res.status(500).json({ error });
       }
     })()
@@ -223,7 +221,6 @@ module.exports = {
 
         return res.status(201).json({ result: "Product updated successfully" });
       } catch (error) {
-        console.log(error)
         return res.status(500).json({ error });
       }
     })();
@@ -249,7 +246,6 @@ module.exports = {
         return res.status(204).json({ response: 'Product deleted successfully' })
       }
       catch (error) {
-        console.log(error)
         return res.status(500).json({ error })
       }
     })()
