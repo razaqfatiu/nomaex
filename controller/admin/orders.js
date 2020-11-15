@@ -63,7 +63,7 @@ module.exports = {
 
         config = {
           headers: {
-            Authorization: `Bearer ${process.env.PAYSTACK_SECRET_TEST_KEY}`,
+            Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
             'Content-Type': 'application/json'
           }
         }
@@ -137,7 +137,7 @@ module.exports = {
         // const { reference } = req.body
         config = {
           headers: {
-            Authorization: `Bearer ${process.env.PAYSTACK_SECRET_TEST_KEY}`,
+            Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
             'Content-Type': 'application/json'
           }
         }
