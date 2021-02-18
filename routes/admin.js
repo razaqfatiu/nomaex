@@ -11,6 +11,7 @@ const {
   signOut,
   authenticate,
   verifyAccount,
+  generateVerificationLink
 } = require('../controller/admin/auth');
 const { auth } = require('../middleware/auth');
 const {
@@ -24,9 +25,22 @@ const {
 } = require('../controller/admin/products');
 const { listAllCategories } = require('../controller/admin/get-categories');
 const multer = require('../middleware/multer');
-const { addItemsToCart, getItemsInUserCart, removeItemFromCart } = require('../controller/admin/cart');
 const {
-  createOrder, getInitializedOrder, checkOutPay, verifyCheckOut, getRecentOrders, cancelOrder, adminGetAllOrders, adminOneOrder, adminOrderShipped, adminConfirmDelivery,
+  addItemsToCart,
+  getItemsInUserCart,
+  removeItemFromCart,
+} = require('../controller/admin/cart');
+const {
+  createOrder,
+  getInitializedOrder,
+  checkOutPay,
+  verifyCheckOut,
+  getRecentOrders,
+  cancelOrder,
+  adminGetAllOrders,
+  adminOneOrder,
+  adminOrderShipped,
+  adminConfirmDelivery,
 } = require('../controller/admin/orders');
 
 const adminRouter = express.Router();
@@ -39,6 +53,7 @@ adminRouter.post('/signup', signUp);
 adminRouter.get('/auth', auth, authenticate);
 adminRouter.get('/sign-out', signOut);
 adminRouter.patch('/account/activation', verifyAccount);
+adminRouter.post('/auth/account/generate', generateVerificationLink);
 adminRouter.post('/auth/forgot-password', forgotPassword);
 adminRouter.patch('/auth/reset-password', passwordReset);
 adminRouter.get('/user/me', auth, getUserInfo);
@@ -71,7 +86,10 @@ adminRouter.get('/orders/recent', auth, getRecentOrders);
 adminRouter.get('/admin/orders', auth, adminGetAllOrders);
 adminRouter.get('/admin/orders/:orderId', auth, adminOneOrder);
 adminRouter.get('/admin/shipped/orders/:orderId', auth, adminOrderShipped);
-adminRouter.patch('/admin/delivered/orders/:orderId', auth, adminConfirmDelivery);
-
+adminRouter.patch(
+  '/admin/delivered/orders/:orderId',
+  auth,
+  adminConfirmDelivery
+);
 
 module.exports = adminRouter;

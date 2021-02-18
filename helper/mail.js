@@ -40,9 +40,7 @@ module.exports = {
           text: `Dear ${userInfo.name}, \n\n
           Thank you for signing up with NOMAEX.\n
           To verify your account, Please click on the following link, or paste the link into your browser to complete the process:\n
-          ${req.protocol}://${req.get("host").slice(0, -4)}${
-            process.env.frontEndPort
-          }/verify/user/${userInfo.token}\n
+          ${process.env.frontEndURL}/verify/user/${userInfo.token}\n
           If you did not request this, please ignore this email.\n\n
           Best regards,
           Nomaex.
