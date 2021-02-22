@@ -11,7 +11,8 @@ userRouter.get('/test', async (req, res) => {
     try {
       const userInfo = { name: 'fatiu', email: 'support@nomaex.com', token: 'dca4bfb708cc287a548ab4561ec9aa80f553ffb7' }
       emailConfig = {
-        from: process.env.NOMAEX_EMAIL,
+        from: 'razaqfatiu@gmail.com',
+        // process.env.NOMAEX_EMAIL,
         to: userInfo.email,
         subject: 'Password Reset',
         text: `Dear ${userInfo.name}, \n\n
