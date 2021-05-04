@@ -10,12 +10,12 @@ module.exports = {
                     attributes: ['categoryId', 'value']
                 })
                 res.status(200).json({
-                    getCategories
+                    data: getCategories
                 })
             }
             catch(error) {
                 res.status(500).json({
-                    error
+                    error: error.message
                 })
             }
 

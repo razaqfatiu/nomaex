@@ -40,9 +40,11 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // app.use(cors());
+// app.use(cors({ credentials: true, origin: '*' }));
 app.use(cors({ credentials: true, origin: process.env.frontEndURL }));
 
 app.use((req, res, next) => {
+  // res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Origin', process.env.frontEndURL);
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
   res.header('Access-Control-Allow-Credentials', true);

@@ -90,8 +90,8 @@ module.exports = {
           message: "Admin Account successfully created",
           userId,
         });
-      } catch (err) {
-        return res.status(500).json({ errorResponse: err });
+      } catch (error) {
+        return res.status(500).json({ errorResponse: error.message });
       }
     })();
   },
@@ -162,8 +162,8 @@ module.exports = {
         return res.status(201).json({
           message: "Account successfully created",
         });
-      } catch (err) {
-        return res.status(500).json({ errorResponse: err });
+      } catch (error) {
+        return res.status(500).json({ errorResponse: error.message });
       }
     })();
   },
@@ -202,7 +202,7 @@ module.exports = {
           .status(200)
           .json({ message: "Account Activated Successfully" });
       } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
       }
     })();
   },
@@ -219,7 +219,7 @@ module.exports = {
       } catch (error) {
         if (error.message === "jwt expired")
           res.status(400).json({ value: "please sign in" });
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
       }
     })();
   },
@@ -296,7 +296,7 @@ module.exports = {
         // return res.status(200).json({ response: decodedToken });
         return res.status(200).json({ message: "Sign in successful!" });
       } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ error: error.message });
       }
     })();
   },
@@ -311,7 +311,7 @@ module.exports = {
         });
         return res.status(200).json({ data: await getUserDetails.dataValues });
       } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
       }
     })();
   },
@@ -414,7 +414,7 @@ module.exports = {
         });
       } catch (error) {
         console.log(error);
-        return res.status(500).json({ error });
+        return res.status(500).json({ error: error.message });
       }
     })();
   },
@@ -461,7 +461,7 @@ module.exports = {
 
         return res.status(201).json({ result: resetPassword });
       } catch (error) {
-        return res.status(500).json({ error });
+        return res.status(500).json({ error: error.message });
       }
     })();
   },
@@ -472,7 +472,7 @@ module.exports = {
           message: "Sign out success!!!",
         });
       } catch (error) {
-        return res.status(500).json({ error });
+        return res.status(500).json({ error: error.message });
       }
     })();
   },

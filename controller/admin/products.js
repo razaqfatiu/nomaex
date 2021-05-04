@@ -72,7 +72,7 @@ module.exports = {
         }
         return res.status(201).json({ message: "Product Uploaded Successfully" });
       } catch (error) {
-        return res.status(500).json({ error });
+        return res.status(500).json({ error: error.message });
       }
     })();
   },
@@ -90,7 +90,7 @@ module.exports = {
 
       }
       catch (error) {
-        return res.status(500).json({ error });
+        return res.status(500).json({ error: error.message });
       }
     })()
   },
@@ -115,7 +115,7 @@ module.exports = {
         return res.status(200).json({ getOneProduct });
       }
       catch (error) {
-        return res.status(500).json({ error });
+        return res.status(500).json({ error: error.message });
       }
     })()
   },
@@ -133,11 +133,11 @@ module.exports = {
           },
           include: [{ model: models.Product_image }, { model: models.ProductShipping }]
         })
-        if (getProductsByCategory.length < 1) return res.status(404).json({ getProductsByCategory: "Cannot find products in this Category you are searching" });
+        // if (getProductsByCategory.length < 1) return res.status(404).json({ getProductsByCategory: "Cannot find products in this Category you are searching" });
         return res.status(200).json({ getProductsByCategory });
       }
       catch (error) {
-        return res.status(500).json({ error });
+        return res.status(500).json({ error: error.message });
       }
     })()
   },
@@ -221,7 +221,7 @@ module.exports = {
 
         return res.status(201).json({ result: "Product updated successfully" });
       } catch (error) {
-        return res.status(500).json({ error });
+        return res.status(500).json({ error: error.message });
       }
     })();
   },
@@ -246,7 +246,7 @@ module.exports = {
         return res.status(204).json({ response: 'Product deleted successfully' })
       }
       catch (error) {
-        return res.status(500).json({ error })
+        return res.status(500).json({ error: error.message })
       }
     })()
 

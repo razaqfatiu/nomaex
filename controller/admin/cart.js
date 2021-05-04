@@ -53,7 +53,7 @@ module.exports = {
         return res.status(200).json({ message: 'Added item to cart' });
       }
       catch (error) {
-        return res.status(500).json({ errorResponse: error });
+        return res.status(500).json({ errorResponse: error.message });
       }
     })()
   },
@@ -66,7 +66,7 @@ module.exports = {
         })
         return res.status(200).json({ message: 'Removed item successfully' });
       } catch (error) {
-        return res.status(500).json({ error });
+        return res.status(500).json({ error: error.message });
       }
     })()
   },
@@ -82,7 +82,7 @@ module.exports = {
             }]
           },
         });
-        if (getUserShoppingCart.length === 0) return res.status(404).json({ getUserCart: 'There is no product in cart yet' });
+        if (getUserShoppingCart.length === 0) return res.status(200).json({ getUserCart: getUserShoppingCart });
         const { shoppingCartId } = getUserShoppingCart[0].dataValues
 
         const getUserCart = await models.Cart.findAll({
@@ -97,7 +97,7 @@ module.exports = {
           getUserCart
         });
       } catch (error) {
-        return res.status(500).json({ error });
+        return res.status(500).json({ error: error.message });
       }
     })()
   }

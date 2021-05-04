@@ -32,7 +32,7 @@ module.exports = {
         const createNewOrder = await models.order.create(newOrder)
         return res.status(201).json({ data: createNewOrder.dataValues.amount });
       } catch (error) {
-        return res.status(500).json({ error });
+        return res.status(500).json({ error: error.message });
       }
     })()
   },
@@ -51,7 +51,7 @@ module.exports = {
         });
         return res.status(200).json({ getNewUserOrder: getNewUserOrder[0] });
       } catch (error) {
-        return res.status(500).json({ error });
+        return res.status(500).json({ error: error.message });
       }
     })()
   },
@@ -125,7 +125,7 @@ module.exports = {
       }
       catch (error) {
         return res.status(500).json({
-          error
+          error: error.message
         });
       }
     })()
@@ -187,7 +187,7 @@ module.exports = {
       }
       catch (error) {
         return res.status(500).json({
-          error
+          error: error.message
         });
       }
     })()
@@ -236,7 +236,7 @@ module.exports = {
 
         res.status(204).json({ message: 'Order was cancelled Successfully' });
       } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
       }
     })()
   },
@@ -260,7 +260,7 @@ module.exports = {
         });
         res.status(200).json({ data: getUserRecentOrder });
       } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
       }
 
     })()
@@ -300,7 +300,7 @@ module.exports = {
 
         res.status(200).json({ data: adminGetAllRecentOrder });
       } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
       }
 
     })()
@@ -346,7 +346,7 @@ module.exports = {
         );
         res.status(200).json({ data: getCxCredentials, shoppingCart: getCxCredentials.shopping_cart });
       } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
       }
 
     })()
@@ -414,7 +414,7 @@ module.exports = {
 
         res.status(200).json({ data: 'Order has been shipped' });
       } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
       }
 
     })()
@@ -445,7 +445,7 @@ module.exports = {
         );
         res.status(200).json({ data: 'Delivery confirmed' });
       } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ error: error.message });
       }
 
     })()
