@@ -280,13 +280,14 @@ module.exports = {
         // { expiresIn: '24' },
         //   );
 
-        res.cookie("token", signToken, {
+        await res.cookie("token", signToken, {
           maxAge: oneDayCookie, // 24 hour
           httpOnly: true,
           sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
           secure: process.env.NODE_ENV === "production" ? true : false,
           domain: process.env.domain,
         });
+        console.log(await req.cookies)
 
         // const tokens = await req.cookies.token;
         // if (!tokens) {
