@@ -248,12 +248,7 @@ module.exports = {
           });
         }
         const accountActivation = await getUser[0].dataValues;
-        // const emaiData = {
-        //   name: getUser[0].dataValues.firstName,
-        //   email: getUser[0].dataValues.email,
-        //   token: getUser[0].dataValues.email,
-        // }
-        // await activateAccount(req, )
+
         if (!accountActivation.isActive) {
           const genToken = await crypto.randomBytes(20);
           const token = genToken.toString('hex');
@@ -271,11 +266,12 @@ module.exports = {
           user.email = userUpdate[1][0].dataValues.email;
           user.token = userUpdate[1][0].dataValues.resetPasswordToken;
           const msg = await activateAccount(req, user);
-        }
-        return res.status(400).json({
+          return res.status(400).json({
           message:
             'You have been sent an email, Please refer to the email sent to activate your account and retry!',
         });
+        }
+        
         const lastTimeLoggedIn = new Date();
         const updateLastLoginInfo = await models.User.update(
           { lastLogin: lastTimeLoggedIn },
