@@ -11,6 +11,7 @@ const {
   signOut,
   authenticate,
   verifyAccount,
+  resendActivationLink,
 } = require('../controller/admin/auth');
 const { auth } = require('../middleware/auth');
 const {
@@ -39,6 +40,7 @@ adminRouter.post('/signup', signUp);
 adminRouter.get('/auth', auth, authenticate);
 adminRouter.get('/sign-out', signOut);
 adminRouter.patch('/account/activation', verifyAccount);
+adminRouter.post('/auth/resend-link', resendActivationLink);
 adminRouter.post('/auth/forgot-password', forgotPassword);
 adminRouter.patch('/auth/reset-password', passwordReset);
 adminRouter.get('/user/me', auth, getUserInfo);

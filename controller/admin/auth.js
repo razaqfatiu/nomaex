@@ -1,36 +1,36 @@
-require("dotenv").config();
+require('dotenv').config();
 // const debug = require('debug')('app');
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const { check, validationResult } = require("express-validator");
-const { Op, where } = require("sequelize");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { check, validationResult } = require('express-validator');
+const { Op, where } = require('sequelize');
 
-const models = require("../../models/index");
-const crypto = require("crypto");
+const models = require('../../models/index');
+const crypto = require('crypto');
 // const nodeMailer = require('../../config/nodemailer');
-const { signAccessToken } = require("../../helper/jwt-helper");
+const { signAccessToken } = require('../../helper/jwt-helper');
 const {
   forgotPassword,
   activateAccount,
   templates,
-} = require("../../helper/mail");
-const { parseEmailContent, client } = require("../../config/nodemailer");
+} = require('../../helper/mail');
+const { parseEmailContent, client } = require('../../config/nodemailer');
 
 module.exports = {
   signUpValidator: [
-    check("firstName").not().isEmpty().trim(),
-    check("lastName").not().isEmpty().trim(),
-    check("email").isEmail().not().isEmpty().trim(),
-    check("password")
+    check('firstName').not().isEmpty().trim(),
+    check('lastName').not().isEmpty().trim(),
+    check('email').isEmail().not().isEmpty().trim(),
+    check('password')
       .isLength({ min: 5 })
       .not()
       .isEmpty()
       .trim()
-      .withMessage("must be at least 5 chars long"),
-    check("address1").isLength({ min: 4 }).not().isEmpty().trim(),
-    check("address2").not().isEmpty().trim(),
-    check("state").not().isEmpty().trim(),
-    check("phoneNumber").not().isEmpty().trim(),
+      .withMessage('must be at least 5 chars long'),
+    check('address1').isLength({ min: 4 }).not().isEmpty().trim(),
+    check('address2').not().isEmpty().trim(),
+    check('state').not().isEmpty().trim(),
+    check('phoneNumber').not().isEmpty().trim(),
   ],
 
   createAdmin(req, res) {
@@ -59,12 +59,12 @@ module.exports = {
         });
         if (checkIfNewuserExists.length > 0) {
           return res.status(400).json({
-            error: "User account exists, Consider resetting your password",
+            error: 'User account exists, Consider resetting your password',
           });
         }
         if (!isAdministrator) {
           return res.status(401).json({
-            error: "Only Admins can create accounts",
+            error: 'Only Admins can create accounts',
           });
         }
         const hash = await bcrypt.hash(password, 10);
@@ -87,7 +87,7 @@ module.exports = {
         await models.User.sync();
         await models.User.create(newUser);
         return res.status(201).json({
-          message: "Admin Account successfully created",
+          message: 'Admin Account successfully created',
           userId,
         });
       } catch (error) {
@@ -119,7 +119,7 @@ module.exports = {
         });
         if (checkIfNewuserExists.length > 0) {
           return res.status(400).json({
-            error: "User account exists, Consider resetting your password",
+            error: 'User account exists, Consider resetting your password',
           });
         }
 
@@ -128,7 +128,7 @@ module.exports = {
         const user = {};
         user.name = firstName;
         user.email = email;
-        const token = (user.token = genToken.toString("hex"));
+        const token = (user.token = genToken.toString('hex'));
         const newUser = {
           firstName,
           lastName,
@@ -160,7 +160,7 @@ module.exports = {
         activateAccount(req, user);
 
         return res.status(201).json({
-          message: "Account successfully created",
+          message: 'Account successfully created',
         });
       } catch (error) {
         return res.status(500).json({ errorResponse: error.message });
@@ -179,15 +179,15 @@ module.exports = {
         if (verAccount.length < 1) {
           return res.status(401).json({
             error:
-              "Account was previously verified or Activation token is invalid or has expired.",
+              'Account was previously verified or Activation token is invalid or has expired.',
           });
         }
         const checkifVerifiedBefore = await verAccount[0].dataValues;
-        if (checkifVerifiedBefore.resetPasswordToken === "")
-          res.status(400).json({ message: "Account was verified" });
+        if (checkifVerifiedBefore.resetPasswordToken === '')
+          res.status(400).json({ message: 'Account was verified' });
         await models.User.update(
           {
-            resetPasswordToken: "",
+            resetPasswordToken: '',
             isActive: true,
             updatedAt: new Date(),
           },
@@ -200,7 +200,7 @@ module.exports = {
         );
         return res
           .status(200)
-          .json({ message: "Account Activated Successfully" });
+          .json({ message: 'Account Activated Successfully' });
       } catch (error) {
         res.status(500).json({ error: error.message });
       }
@@ -211,14 +211,14 @@ module.exports = {
       try {
         const now = new Date().getTime / 1000;
         const { token } = await req.cookies;
-        if (typeof token !== "string") {
-          return res.sendStatus(401).json({ error: "Invalid token" });
+        if (typeof token !== 'string') {
+          return res.sendStatus(401).json({ error: 'Invalid token' });
         }
         const userCred = await jwt.verify(token, process.env.TOKEN_SECRET);
         return res.status(200).json({ userCred });
       } catch (error) {
-        if (error.message === "jwt expired")
-          res.status(400).json({ value: "please sign in" });
+        if (error.message === 'jwt expired')
+          res.status(400).json({ value: 'please sign in' });
         res.status(500).json({ error: error.message });
       }
     })();
@@ -235,7 +235,7 @@ module.exports = {
         });
         if (getUser.length === 0) {
           return res.status(401).json({
-            error: "User not found",
+            error: 'User not found',
           });
         }
         const compareHash = await bcrypt.compare(
@@ -244,14 +244,14 @@ module.exports = {
         );
         if (!compareHash) {
           return res.status(401).json({
-            error: "Incorrect email or password",
+            error: 'Incorrect email or password',
           });
         }
         const accountActivation = await getUser[0].dataValues;
         if (accountActivation.isActive == false)
           return res.status(400).json({
             message:
-              "Please refer to the previous email sent to activate your account and retry!",
+              'Please refer to the previous email sent to activate your account and retry!',
           });
         const lastTimeLoggedIn = new Date();
         const updateLastLoginInfo = await models.User.update(
@@ -280,14 +280,14 @@ module.exports = {
         // { expiresIn: '24' },
         //   );
 
-        await res.cookie("token", signToken, {
+        await res.cookie('token', signToken, {
           maxAge: oneDayCookie, // 24 hour
           httpOnly: true,
-          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-          secure: process.env.NODE_ENV === "production" ? true : false,
+          sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+          secure: process.env.NODE_ENV === 'production' ? true : false,
           domain: process.env.domain,
         });
-        console.log(await req.cookies)
+        console.log(await req.cookies);
 
         // const tokens = await req.cookies.token;
         // if (!tokens) {
@@ -295,7 +295,7 @@ module.exports = {
         // }
         // const decodedToken = await jwt.verify(tokens, process.env.TOKEN_SECRET);
         // return res.status(200).json({ response: decodedToken });
-        return res.status(200).json({ message: "Sign in successful!" });
+        return res.status(200).json({ message: 'Sign in successful!' });
       } catch (error) {
         return res.status(500).json({ error: error.message });
       }
@@ -336,7 +336,7 @@ module.exports = {
           where: { email },
         });
         if (checkIfNewuserExists.length > 0) {
-          return res.status(400).json({ error: "User account exists" });
+          return res.status(400).json({ error: 'User account exists' });
         }
         const hash = await bcrypt.hash(password, 10);
         const newUser = {
@@ -353,7 +353,7 @@ module.exports = {
         await models.User.sync();
         await models.User.create(newUser);
         return res.status(201).json({
-          message: "Admin Account successfully created",
+          message: 'Admin Account successfully created',
         });
       } catch (err) {
         return res.status(500).json({ errorResponse: err.message });
@@ -374,7 +374,7 @@ module.exports = {
         if (checkIfUserExists.length < 1) {
           return res
             .status(401)
-            .json({ error: "Account not found, Create an account" });
+            .json({ error: 'Account not found, Create an account' });
         }
         const userDetails = checkIfUserExists[0].dataValues;
         const { firstName, email: userEmail } = userDetails;
@@ -382,7 +382,7 @@ module.exports = {
         user.name = firstName;
         user.email = userEmail;
         const genToken = await crypto.randomBytes(20);
-        const token = (user.token = genToken.toString("hex"));
+        const token = (user.token = genToken.toString('hex'));
 
         const updateUserWithToken = await models.User.update(
           {
@@ -408,10 +408,10 @@ module.exports = {
         //   templates.forgotPassword.body(req, user)
         // );
         const sendEmail = await forgotPassword(req, user);
-        console.log(sendEmail)
+        console.log(sendEmail);
 
         return res.status(200).json({
-          message: "email sent",
+          message: 'email sent',
         });
       } catch (error) {
         console.log(error);
@@ -434,12 +434,12 @@ module.exports = {
         if (resetPassword.length < 1) {
           return res
             .status(401)
-            .json({ error: "Password reset token is invalid or has expired." });
+            .json({ error: 'Password reset token is invalid or has expired.' });
         }
         if (!(req.body.newPassword === req.body.verifyPassword)) {
           return res
             .status(400)
-            .json({ response: "The new password must match." });
+            .json({ response: 'The new password must match.' });
         }
         const hash = await bcrypt.hash(req.body.newPassword, 10);
 
@@ -466,11 +466,39 @@ module.exports = {
       }
     })();
   },
+  resendActivationLink(req, res) {
+    (async () => {
+      try {
+        const { email } = req.body;
+        const genToken = await crypto.randomBytes(20);
+        const token = genToken.toString('hex');
+
+        const userUpdate = await models.User.update(
+          {
+            resetPasswordToken: token,
+          },
+          {
+            returning: true,
+            where: { email },
+          }
+        );
+        const user = {}
+        user.name = userUpdate[1][0].dataValues.firstName
+        user.email = userUpdate[1][0].dataValues.email
+        user.token = userUpdate[1][0].dataValues.resetPasswordToken
+        const msg = await activateAccount(req, user);
+
+        return res.status(200).json({ message: 'Resent activation link' });
+      } catch (error) {
+        return res.status(500).json({ error: error.message });
+      }
+    })();
+  },
   signOut(req, res) {
     (async () => {
       try {
-        return res.clearCookie("token", { path: "/" }).status(200).json({
-          message: "Sign out success!!!",
+        return res.clearCookie('token', { path: '/' }).status(200).json({
+          message: 'Sign out success!!!',
         });
       } catch (error) {
         return res.status(500).json({ error: error.message });

@@ -23,7 +23,7 @@ module.exports = {
         return sendEmail;
       } catch (error) {
         console.log(error);
-        return error;
+        throw new Error(error.message);
       }
     })();
   },
@@ -46,7 +46,8 @@ module.exports = {
         sendEmail = await transporter.sendMail(emailConfig);
         return sendEmail;
       } catch (error) {
-        return error;
+        console.log(error.message)
+        throw new Error(error.message);
       }
     })();
   },
@@ -67,7 +68,7 @@ module.exports = {
         sendEmail = await transporter.sendMail(emailConfig);
         return sendEmail;
       } catch (error) {
-        return error;
+        throw new Error(error.message);
       }
     })();
   },
