@@ -18,7 +18,7 @@ module.exports = {
       {
         firstName: 'Admin',
         lastName: 'Nomaex',
-        email: 'adminNomaex@gmail.com',
+        email: 'nomaexdev@gmail.com',
         address1: 'Lagos',
         address2: 'Abuja',
         state: 'Lagos',
